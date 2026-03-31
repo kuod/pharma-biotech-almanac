@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top 25 Pharma Companies by Market Cap — 1950–2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f5f2eb;--bg-card:#faf8f3;--ink:#1a1814;--ink-2:#4a4540;--ink-3:#8a8078;
+  --rule:#ddd8ce;--accent:#b84a2e;--accent-light:#f5e8e4;
+  --gold:#c9943a;--gold-light:#f7f0e1;--silver:#7a8a96;--silver-light:#eaeef1;
+  --pill-bg:#e8ede8;--pill-ink:#2a4a2a;
+}
+body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',sans-serif;min-height:100vh;}
+.masthead{background:var(--ink);color:var(--bg);padding:3rem 3rem 2.5rem;position:relative;overflow:hidden;}
+.masthead::before{content:'';position:absolute;top:0;right:0;bottom:0;width:40%;background:repeating-linear-gradient(-45deg,transparent,transparent 18px,rgba(255,255,255,.025) 18px,rgba(255,255,255,.025) 19px);pointer-events:none;}
+.masthead-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;}
+.masthead h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:400;line-height:1.1;letter-spacing:-.02em;max-width:700px;margin-bottom:1rem;}
+.masthead-sub{font-size:14px;color:rgba(245,242,235,.6);max-width:600px;line-height:1.6;}
+.tab-bar{background:var(--ink);border-top:1px solid rgba(255,255,255,.08);display:flex;padding:0 3rem;}
+.tab-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:12px 22px;background:transparent;border:none;border-bottom:2px solid transparent;color:rgba(245,242,235,.4);cursor:pointer;transition:all .15s;}
+.tab-btn:hover{color:rgba(245,242,235,.7);}
+.tab-btn.active{color:var(--bg);border-bottom-color:var(--accent);}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+.shell{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 4rem;}
+.nav-section{margin-bottom:2rem;}
+.nav-era-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.5rem;padding-left:2px;}
+.nav-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.75rem;}
+.nav-row:last-child{margin-bottom:0;}
+.year-btn{font-family:'DM Mono',monospace;font-size:12px;padding:6px 13px;border-radius:2px;border:1px solid var(--rule);background:var(--bg-card);color:var(--ink-2);cursor:pointer;transition:all .15s;letter-spacing:.03em;}
+.year-btn:hover{border-color:var(--ink-3);color:var(--ink);background:#fff;}
+.year-btn.active{background:var(--ink);border-color:var(--ink);color:var(--bg);}
+.view-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--ink);}
+.view-year{font-family:'DM Serif Display',serif;font-size:3rem;font-weight:400;line-height:1;letter-spacing:-.02em;}
+.view-note{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-3);letter-spacing:.05em;padding:3px 8px;border:1px solid var(--rule);border-radius:2px;background:var(--bg-card);}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:8px 10px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap;}
+thead th.r{text-align:right;}
+tbody tr{border-bottom:1px solid var(--rule);transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,.6);}
+tbody td{padding:9px 10px;vertical-align:middle;}
+tbody td.r{text-align:right;}
+tbody td.muted{color:var(--ink-3);font-size:12px;}
+.rank{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:2px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;}
+.rank-1{background:var(--gold-light);color:var(--gold);border:1px solid #e8d4a8;}
+.rank-2{background:var(--silver-light);color:var(--silver);border:1px solid #cfd6db;}
+.rank-3{background:var(--accent-light);color:var(--accent);border:1px solid #e8c8be;}
+.rank-other{background:transparent;color:var(--ink-3);border:1px solid var(--rule);}
+.co-name{font-weight:500;}
+.cap-val{font-family:'DM Mono',monospace;font-size:12px;white-space:nowrap;}
+.bar-cell{width:80px;}
+.bar-track{height:3px;background:var(--rule);border-radius:1px;overflow:hidden;}
+.bar-fill{height:3px;background:var(--accent);border-radius:1px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.drug-pills{display:flex;flex-wrap:wrap;gap:4px;}
+.drug-pill{font-size:10px;padding:2px 7px;border-radius:2px;background:var(--pill-bg);color:var(--pill-ink);white-space:nowrap;border:1px solid #c8d8c8;}
+.footer-row{display:flex;justify-content:space-between;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--rule);}
+.footer-total{font-family:'DM Mono',monospace;font-size:12px;color:var(--ink-3);}
+.footer-total span{color:var(--ink);font-weight:500;}
+.fn{margin-top:1.25rem;font-size:12px;color:var(--ink-3);line-height:1.7;padding-left:1rem;border-left:2px solid var(--rule);font-style:italic;}
+.hm-shell{max-width:1500px;margin:0 auto;padding:2.5rem 2rem 4rem;}
+.hm-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--ink);}
+.hm-title{font-family:'DM Serif Display',serif;font-size:2rem;font-weight:400;letter-spacing:-.02em;margin-bottom:.4rem;}
+.hm-desc{font-size:13px;color:var(--ink-3);line-height:1.6;}
+#hm-sort-note{margin-top:6px;font-size:12px;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:.02em;}
+.hm-wrap{overflow-x:auto;padding-bottom:.5rem;}
+.hm-grid{display:grid;border-top:1px solid var(--rule);border-left:1px solid var(--rule);width:max-content;min-width:100%;}
+.hm-year-head{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.05em;color:var(--ink-2);padding:6px 4px 8px;text-align:center;white-space:nowrap;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--bg);position:sticky;top:0;z-index:3;}
+.hm-corner-head{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--bg);position:sticky;top:0;left:0;z-index:5;}
+.hm-label{font-size:11px;font-weight:500;color:var(--ink);padding:0 8px 0 6px;display:flex;align-items:center;gap:5px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);white-space:nowrap;min-width:165px;background:var(--bg);position:sticky;left:0;z-index:2;}
+.hm-label .lbl-flag{font-size:12px;flex-shrink:0;}
+.hm-label .lbl-name{font-size:11px;font-weight:500;}
+.hm-cell{border-right:1px solid rgba(255,255,255,.3);border-bottom:1px solid rgba(255,255,255,.3);min-width:58px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:transform .12s;}
+.hm-cell:hover{transform:scale(1.08);z-index:10;box-shadow:0 3px 14px rgba(0,0,0,.22);}
+.hm-inner{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.hm-cap{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:500;line-height:1;}
+.hm-rnk{font-family:'DM Mono',monospace;font-size:8px;opacity:.72;line-height:1;}
+.hm-cell-na{background:#eae6dc !important;cursor:default;border-right:1px solid var(--rule) !important;border-bottom:1px solid var(--rule) !important;}
+.hm-cell-na:hover{transform:none;box-shadow:none;}
+.hm-cell-na::after{content:'—';font-size:12px;color:#c0bab0;}
+.legend{display:flex;align-items:flex-start;gap:16px;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule);flex-wrap:wrap;}
+.legend-inner{display:flex;flex-direction:column;gap:4px;}
+.legend-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+.legend-bar-el{width:260px;height:10px;border-radius:2px;background:linear-gradient(to right,#f2ece2,#e8c88a,#c97439,#8a2a0e,#480e05);}
+.legend-ticks{display:flex;justify-content:space-between;width:260px;}
+.legend-tick{font-family:'DM Mono',monospace;font-size:9px;color:var(--ink-3);}
+.legend-note{font-size:12px;color:var(--ink-3);line-height:1.6;max-width:480px;font-style:italic;padding-top:2px;}
+#hm-tip{position:fixed;pointer-events:none;z-index:9999;background:var(--ink);color:var(--bg);padding:11px 15px;border-radius:3px;font-size:12px;line-height:1.65;max-width:260px;opacity:0;transition:opacity .12s;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+#hm-tip.on{opacity:1;}
+#hm-tip .t-yr{font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,242,235,.45);letter-spacing:.08em;margin-bottom:2px;}
+#hm-tip .t-co{font-weight:600;font-size:13px;margin-bottom:4px;}
+#hm-tip .t-cap{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:#f0c070;margin-bottom:2px;}
+#hm-tip .t-rk{font-size:11px;color:rgba(245,242,235,.6);margin-bottom:4px;}
+#hm-tip .t-dr{font-size:11px;color:rgba(245,242,235,.5);border-top:1px solid rgba(255,255,255,.1);padding-top:5px;margin-top:3px;}
+.credit{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--rule);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);text-align:center;}
+@media(max-width:640px){
+  .masthead,.tab-bar{padding-left:1.25rem;padding-right:1.25rem;}
+  .shell,.hm-shell{padding:1.5rem 1rem 3rem;}
+  .bar-cell,thead th.hide-sm,tbody td.hide-sm{display:none;}
+  .hm-label{min-width:120px;font-size:10px;padding:0 4px;}
+  .hm-cell{min-width:44px;height:38px;}
+}
+#lin-overlay{position:fixed;inset:0;z-index:1000;display:none;background:rgba(26,24,20,.35);}
+#lin-panel{position:fixed;right:0;top:0;height:100vh;width:380px;background:var(--ink);color:var(--bg);z-index:1001;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-4px 0 40px rgba(0,0,0,.45);}
+#lin-panel.open{transform:translateX(0);}
+#lin-header{display:flex;align-items:flex-start;justify-content:space-between;padding:1.5rem 1.25rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+#lin-flag-name{font-family:'DM Serif Display',serif;font-size:1.2rem;font-weight:400;line-height:1.2;color:var(--bg);}
+#lin-sub{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:5px;}
+#lin-close{background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(245,242,235,.5);width:28px;height:28px;border-radius:2px;cursor:pointer;font-size:16px;line-height:1;flex-shrink:0;margin-top:2px;transition:color .12s,border-color .12s;}
+#lin-close:hover{color:var(--bg);border-color:rgba(255,255,255,.4);}
+#lin-body{flex:1;overflow-y:auto;padding:1.25rem;}
+#lin-chart-wrap{background:#fff;border-radius:3px;padding:1rem;min-height:120px;display:flex;align-items:flex-start;justify-content:center;}
+#lin-chart{width:100%;}
+#lin-chart svg{max-width:100%;height:auto;}
+#lin-none{padding:2rem 0;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-3);letter-spacing:.04em;text-align:center;}
+#lin-hint{margin-top:1rem;font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.04em;line-height:1.6;padding:0 .25rem;}
+.hm-label{cursor:pointer;}
+.hm-label:hover .lbl-name{text-decoration:underline;text-underline-offset:2px;}
+@media(max-width:640px){#lin-panel{width:100vw;}}
+#bubble-wrap{width:100%;overflow-x:auto;margin-bottom:1.5rem;}
+#bubble-wrap svg{display:block;}
+#treemap-wrap,#treemap-year-wrap{width:100%;overflow:hidden;margin-bottom:1.5rem;}
+#treemap-wrap svg,#treemap-year-wrap svg{display:block;}
+#bubble-legend{display:flex;flex-wrap:wrap;gap:8px 16px;padding-top:1.25rem;border-top:1px solid var(--rule);margin-bottom:1.5rem;}
+.bleg{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.04em;color:var(--ink-2);cursor:default;}
+.bleg-swatch{width:11px;height:11px;border-radius:50%;flex-shrink:0;opacity:.85;}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-label">Industry Analysis · 1950–2025</div>
+  <h1>Top 25 Drug Companies<br><em>by Market Capitalization</em></h1>
+  <p class="masthead-sub">Seven decades of pharmaceutical dominance at 5-year intervals — from postwar antibiotics to GLP-1 blockbusters. Rankings, market caps, and key products across every era.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="rankings">Rankings</button>
+  <button class="tab-btn" data-tab="heatmap">Heatmap</button>
+  <button class="tab-btn" data-tab="bubble">Bubble</button>
+  <button class="tab-btn" data-tab="treemap-year">Treemap-Year</button>
+  <button class="tab-btn" data-tab="treemap-agg">Treemap-Aggregate</button>
+</div>
+
+<div class="tab-panel active" id="tab-rankings">
+  <div class="shell">
+    <div class="nav-section">
+      <div class="nav-era-label">Early era — estimated figures</div>
+      <div class="nav-row" id="nav-early"></div>
+      <div class="nav-era-label">Modern era — reported figures</div>
+      <div class="nav-row" id="nav-modern"></div>
+    </div>
+    <div class="view-header">
+      <div class="view-year" id="view-year">2025</div>
+      <div class="view-note" id="view-note" style="display:none;"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:40px;">#</th><th>Company</th>
+          <th class="hide-sm">Ctry</th><th class="r">Mkt Cap</th>
+          <th class="bar-cell hide-sm"></th><th>Key Products</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="footer-row"><div class="footer-total">Top 25 combined: <span id="total"></span></div></div>
+    <div class="fn" id="fn"></div>
+    <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-heatmap">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Market Cap Heatmap, 1950–2025</div>
+      <div class="hm-desc">All companies that appeared in any top-25 ranking across 16 five-year snapshots. Darker = higher valuation. Gray = not ranked that year. Hover for details.</div>
+      <div id="hm-sort-note">Sorted by aggregate market cap across all years. Click any year header to sort by that year.</div>
+    </div>
+    <div class="hm-wrap"><div class="hm-grid" id="hm-grid"></div></div>
+    <div class="legend">
+      <div class="legend-inner">
+        <div class="legend-lbl">Market cap scale</div>
+        <div class="legend-bar-el"></div>
+        <div class="legend-ticks">
+          <span class="legend-tick">$0</span><span class="legend-tick">$100B</span>
+          <span class="legend-tick">$300B</span><span class="legend-tick">$500B</span>
+          <span class="legend-tick">$750B+</span>
+        </div>
+      </div>
+      <div class="legend-note">Scale uses √ transform so mid-tier companies stay visible. Pre-1990 = estimates. Gray = not in top 25 that year.</div>
+    </div>
+    <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-bubble">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Inflation-Adjusted Market Cap, 1950–2025</div>
+      <div class="hm-desc">All top-25 snapshots on a single scale, converted to 2025 USD using US CPI. X = year · Y = 2025-dollar value (log scale) · Size = market cap · Color = corporate family. Hover a bubble to trace a company across all years.</div>
+    </div>
+    <div id="bubble-wrap"></div>
+    <div id="bubble-legend"></div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-treemap-year">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Treemap-Year — Every Snapshot, Inflation-Adjusted</div>
+      <div class="hm-desc">Each cell = one company in one year. Size = 2025-dollar market cap for that snapshot. All ~400 data points sorted by size. Color = corporate family. Hover to explore, click for lineage.</div>
+    </div>
+    <div id="treemap-year-wrap"></div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-treemap-agg">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Treemap-Aggregate — Cumulative Inflation-Adjusted Dominance, 1950–2025</div>
+      <div class="hm-desc">Each cell = one company. Size = cumulative 2025-dollar market cap across all top-25 appearances. Grouped and colored by corporate family. Hover to explore, click for lineage.</div>
+    </div>
+    <div id="treemap-wrap"></div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div id="hm-tip">
+  <div class="t-yr" id="t-yr"></div><div class="t-co" id="t-co"></div>
+  <div class="t-cap" id="t-cap"></div><div class="t-rk" id="t-rk"></div>
+  <div class="t-dr" id="t-dr"></div>
+</div>
+
+<div id="lin-overlay"></div>
+<div id="lin-panel">
+  <div id="lin-header">
+    <div>
+      <div id="lin-flag-name"></div>
+      <div id="lin-sub">Corporate lineage</div>
+    </div>
+    <button id="lin-close">×</button>
+  </div>
+  <div id="lin-body">
+    <div id="lin-chart-wrap"><div id="lin-chart"></div></div>
+    <div id="lin-none"></div>
+    <div id="lin-hint"></div>
+  </div>
+</div>
+
+<script>
+mermaid.initialize({startOnLoad:false,theme:'neutral',flowchart:{curve:'basis',htmlLabels:true}});
+
+const data={
+  1950:{note:"estimated",footnote:"Industry dominated by US companies emerging from WWII antibiotic boom. European firms were embedded in chemical conglomerates. Market caps in tens to hundreds of millions.",rows:[
+    {company:"American Home Products",country:"US",cap:.80,drugs:["Anacin","Premarin","Advil (precursor)"]},
+    {company:"Merck & Co.",country:"US",cap:.70,drugs:["Cortisone","Streptomycin","Vitamin B12"]},
+    {company:"Abbott Laboratories",country:"US",cap:.50,drugs:["Pentothal","Erythromycin","Chloromycetin"]},
+    {company:"Eli Lilly",country:"US",cap:.45,drugs:["Insulin","Erythromycin","Salk vaccine (mfg)"]},
+    {company:"Pfizer",country:"US",cap:.40,drugs:["Terramycin","Penicillin","Aureomycin"]},
+    {company:"Bristol-Myers",country:"US",cap:.35,drugs:["Bufferin","Penicillin","Amcill"]},
+    {company:"Parke-Davis",country:"US",cap:.30,drugs:["Chloromycetin","Dilantin","Adrenalin"]},
+    {company:"Squibb",country:"US",cap:.28,drugs:["Penicillin","Nystatin","Theragran"]},
+    {company:"Upjohn",country:"US",cap:.25,drugs:["Cortisone","Orinase (dev)","Motrin (dev)"]},
+    {company:"Sterling Drug",country:"US",cap:.22,drugs:["Bayer Aspirin","Neoprontosil","Winthrop"]},
+    {company:"Smith Kline & French",country:"US",cap:.20,drugs:["Dexedrine","Thorazine (dev)","SKF antibiotics"]},
+    {company:"Schering Corp.",country:"US",cap:.16,drugs:["Meticorten","Celestone","Tinactin (dev)"]},
+    {company:"Roche (US ops)",country:"CH",cap:.14,drugs:["Librium (dev)","Vitamins","Berocca"]},
+    {company:"Searle",country:"US",cap:.13,drugs:["Enovid (dev)","Dramamine","Aldactone"]},
+    {company:"Lederle Laboratories",country:"US",cap:.12,drugs:["Aureomycin","Achromycin","CL-13900"]},
+    {company:"Carter Wallace",country:"US",cap:.11,drugs:["Miltown (dev)","Carter's Pills","Arrid"]},
+    {company:"A.H. Robins",country:"US",cap:.10,drugs:["Robitussin","Dimetane","Donnatal"]},
+    {company:"Burroughs Wellcome",country:"GB",cap:.09,drugs:["6-MP (dev)","Actifed","Septra (dev)"]},
+    {company:"Sandoz",country:"CH",cap:.08,drugs:["Methergine","Cafergot","Hydergine (dev)"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:.07,drugs:["Novocain","Sulfonamides","Lasix (dev)"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:.07,drugs:["Paludrine","Hibitane","Nolvadex (dev)"]},
+    {company:"Ciba",country:"CH",cap:.06,drugs:["Ritalin (dev)","Apresoline","Serpasil"]},
+    {company:"Geigy",country:"CH",cap:.06,drugs:["Tofranil (dev)","Butazolidin","Aralen"]},
+    {company:"May & Baker",country:"GB",cap:.05,drugs:["Sulphonamides","Daraprim","Largactil"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:.05,drugs:["Bisolvon (dev)","Bellergal","Rheumacin"]}
+  ]},
+  1955:{note:"estimated",footnote:"Post-Salk vaccine era. Chlorpromazine (Thorazine) launched the psychiatric drug revolution. Merck's cortisone synthesis and Smith Kline's Thorazine defined the decade. Tranquilizer market boomed with Miltown.",rows:[
+    {company:"Merck & Co.",country:"US",cap:1.10,drugs:["Cortisone","Diuril (dev)","Aldomet (dev)"]},
+    {company:"American Home Products",country:"US",cap:1.00,drugs:["Anacin","Premarin","Dristan"]},
+    {company:"Abbott Laboratories",country:"US",cap:.72,drugs:["Erythromycin","Pentothal","Chloromycetin"]},
+    {company:"Eli Lilly",country:"US",cap:.65,drugs:["Insulin","Keflin (dev)","Salk vaccine (mfg)"]},
+    {company:"Smith Kline & French",country:"US",cap:.60,drugs:["Thorazine","Dexedrine","Compazine"]},
+    {company:"Pfizer",country:"US",cap:.55,drugs:["Terramycin","Vibramycin (dev)","Diabinese (dev)"]},
+    {company:"Bristol-Myers",country:"US",cap:.50,drugs:["Bufferin","Excedrin","Platinol (dev)"]},
+    {company:"Parke-Davis",country:"US",cap:.42,drugs:["Chloromycetin","Dilantin","Norlestrin (dev)"]},
+    {company:"Upjohn",country:"US",cap:.38,drugs:["Motrin (dev)","Orinase","Cortef"]},
+    {company:"Squibb",country:"US",cap:.35,drugs:["Penicillin","Nystatin","Pentids"]},
+    {company:"Warner-Lambert",country:"US",cap:.32,drugs:["Listerine","Benadryl","Gelusil"]},
+    {company:"Sterling Drug",country:"US",cap:.28,drugs:["Bayer Aspirin","Winthrop products","Midol"]},
+    {company:"Carter Wallace",country:"US",cap:.25,drugs:["Miltown","Soma (dev)","Arrid"]},
+    {company:"Schering Corp.",country:"US",cap:.22,drugs:["Meticorten","Celestone","Tinactin (dev)"]},
+    {company:"Roche",country:"CH",cap:.20,drugs:["Librium (dev)","Vitamins","Bactrim (dev)"]},
+    {company:"Johnson & Johnson",country:"US",cap:.18,drugs:["Band-Aid","Tylenol (dev)","Modane"]},
+    {company:"Searle",country:"US",cap:.16,drugs:["Enovid (dev)","Dramamine","Aldactone"]},
+    {company:"Lederle Laboratories",country:"US",cap:.15,drugs:["Aureomycin","Achromycin","Caltrate (dev)"]},
+    {company:"Sandoz",country:"CH",cap:.13,drugs:["Methergine","Hydergine","Cafergot"]},
+    {company:"Burroughs Wellcome",country:"GB",cap:.12,drugs:["6-MP","Actifed","Daraprim"]},
+    {company:"Ciba",country:"CH",cap:.11,drugs:["Ritalin","Apresoline","Serpasil"]},
+    {company:"Geigy",country:"CH",cap:.10,drugs:["Tofranil","Butazolidin","Tegretol (dev)"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:.09,drugs:["Lasix (dev)","Sulfonamides","Elkosin"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:.08,drugs:["Paludrine","Inderal (dev)","Nolvadex (dev)"]},
+    {company:"Glaxo",country:"GB",cap:.07,drugs:["Griseofulvin","Betnovate (dev)","Ventolin (dev)"]}
+  ]},
+  1960:{note:"estimated",footnote:"Tranquilizer boom: Librium (1960) and Valium (1963) launched. Oral contraceptive Enovid approved 1960. Kefauver-Harris Amendments (1962) transformed FDA approval after Thalidomide. Blockbuster era beginning.",rows:[
+    {company:"American Home Products",country:"US",cap:2.10,drugs:["Anacin","Premarin","Dimetapp"]},
+    {company:"Merck & Co.",country:"US",cap:1.80,drugs:["Diuril","Aldomet","Indocin"]},
+    {company:"Abbott Laboratories",country:"US",cap:1.40,drugs:["Erythromycin","Nembutal","Placidyl"]},
+    {company:"Eli Lilly",country:"US",cap:1.30,drugs:["Insulin","Darvon","Keflex"]},
+    {company:"Bristol-Myers",country:"US",cap:1.20,drugs:["Bufferin","Excedrin","Tetracyn"]},
+    {company:"Warner-Lambert",country:"US",cap:1.00,drugs:["Listerine","Benadryl","Chlor-Trimeton"]},
+    {company:"Pfizer",country:"US",cap:.95,drugs:["Terramycin","Diabinese","Vibramycin"]},
+    {company:"Johnson & Johnson",country:"US",cap:.90,drugs:["Tylenol","Band-Aid","Haldol (dev)"]},
+    {company:"Smith Kline & French",country:"US",cap:.60,drugs:["Thorazine","Dexedrine","Compazine"]},
+    {company:"Upjohn",country:"US",cap:.58,drugs:["Motrin","Depo-Provera","Halcion (dev)"]},
+    {company:"Sterling Drug",country:"US",cap:.55,drugs:["Bayer Aspirin","Cope","Midol"]},
+    {company:"Schering Corp.",country:"US",cap:.50,drugs:["Meticorten","Celestone","Tinactin"]},
+    {company:"Searle",country:"US",cap:.45,drugs:["Enovid","Dramamine","Aldactone"]},
+    {company:"Roche",country:"CH",cap:.42,drugs:["Librium","Valium","Larocaine"]},
+    {company:"Squibb",country:"US",cap:.40,drugs:["Pentids","Nystatin","Capoten (dev)"]},
+    {company:"Parke-Davis",country:"US",cap:.38,drugs:["Chloromycetin","Dilantin","Norlestrin"]},
+    {company:"Sandoz",country:"CH",cap:.35,drugs:["Methergine","Hydergine","Cafergot"]},
+    {company:"Ciba",country:"CH",cap:.32,drugs:["Ritalin","Apresoline","Serpasil"]},
+    {company:"Burroughs Wellcome",country:"GB",cap:.28,drugs:["Actifed","6-MP (Purinethol)","Daraprim"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:.26,drugs:["Lasix","Clont","Volon"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:.24,drugs:["Inderal (dev)","Nolvadex (dev)","Althesin"]},
+    {company:"Geigy",country:"CH",cap:.22,drugs:["Tofranil","Tegretol","Butazolidin"]},
+    {company:"Glaxo",country:"GB",cap:.20,drugs:["Betnovate","Griseofulvin","Ventolin (dev)"]},
+    {company:"Carter Wallace",country:"US",cap:.18,drugs:["Miltown","Soma","Arrid"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:.16,drugs:["Bisolvon","Alupent","Catapresan (dev)"]}
+  ]},
+  1965:{note:"estimated",footnote:"Valium became world's most prescribed drug. Medicare & Medicaid established (1965) transformed US drug market. Propranolol (Inderal) launched cardiovascular revolution. ICI's beta-blockers pioneered cardiovascular treatment.",rows:[
+    {company:"American Home Products",country:"US",cap:3.00,drugs:["Premarin","Anacin","Inderal (AHP)"]},
+    {company:"Merck & Co.",country:"US",cap:2.60,drugs:["Indocin","Aldomet","Diuril"]},
+    {company:"Roche",country:"CH",cap:2.40,drugs:["Valium","Librium","Bactrim"]},
+    {company:"Abbott Laboratories",country:"US",cap:1.90,drugs:["Erythromycin","Penbritin","Placidyl"]},
+    {company:"Eli Lilly",country:"US",cap:1.80,drugs:["Insulin","Darvon","Keflin"]},
+    {company:"Bristol-Myers",country:"US",cap:1.60,drugs:["Bufferin","Excedrin","Platinol (dev)"]},
+    {company:"Warner-Lambert",country:"US",cap:1.40,drugs:["Listerine","Benadryl","Lopid (dev)"]},
+    {company:"Pfizer",country:"US",cap:1.30,drugs:["Vibramycin","Diabinese","Terramycin"]},
+    {company:"Johnson & Johnson",country:"US",cap:1.20,drugs:["Tylenol","Haldol","Retin-A (dev)"]},
+    {company:"Smith Kline & French",country:"US",cap:1.00,drugs:["Thorazine","Dexedrine","Tagamet (dev)"]},
+    {company:"Upjohn",country:"US",cap:.90,drugs:["Motrin","Depo-Provera","Orinase"]},
+    {company:"Sterling Drug",country:"US",cap:.80,drugs:["Bayer Aspirin","Midol","Cope"]},
+    {company:"Schering-Plough",country:"US",cap:.72,drugs:["Celestone","Tinactin","Lotrimin (dev)"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:.68,drugs:["Inderal","Nolvadex (dev)","Althesin"]},
+    {company:"Sandoz",country:"CH",cap:.65,drugs:["Hydergine","Methergine","Parlodel (dev)"]},
+    {company:"Ciba-Geigy",country:"CH",cap:.62,drugs:["Ritalin","Tofranil","Voltaren (dev)"]},
+    {company:"Searle",country:"US",cap:.55,drugs:["Enovid","Aldactone","Dramamine"]},
+    {company:"Squibb",country:"US",cap:.50,drugs:["Pentids","Theragran","Capoten (dev)"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:.45,drugs:["Lasix","Trental (dev)","Claforan (dev)"]},
+    {company:"Burroughs Wellcome",country:"GB",cap:.40,drugs:["Actifed","Purinethol","Septra (dev)"]},
+    {company:"Glaxo",country:"GB",cap:.38,drugs:["Betnovate","Ventolin","Griseofulvin"]},
+    {company:"Takeda",country:"JP",cap:.30,drugs:["Pantecin","Antiformin","Lupron (dev)"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:.28,drugs:["Bisolvon","Alupent","Catapres (dev)"]},
+    {company:"Parke-Davis",country:"US",cap:.26,drugs:["Dilantin","Chloromycetin","Norlestrin"]},
+    {company:"Wellcome",country:"GB",cap:.22,drugs:["Actifed","Septra (dev)","Daraprim"]}
+  ]},
+  1970:{note:"estimated",footnote:"Roche's Valium was world's best-selling drug. Nixon declared War on Cancer (1971). Generic drug movement began. European pharma grew through the 1970s oil crisis. US market dominated by broad-spectrum antibiotics.",rows:[
+    {company:"American Home Products",country:"US",cap:4.20,drugs:["Premarin","Inderal","Dristan"]},
+    {company:"Merck & Co.",country:"US",cap:3.80,drugs:["Indocin","Aldomet","Timoptic"]},
+    {company:"Hoffmann-La Roche",country:"CH",cap:3.50,drugs:["Valium","Librium","Rocephin (dev)"]},
+    {company:"Eli Lilly",country:"US",cap:3.00,drugs:["Insulin","Darvon","Ceclor"]},
+    {company:"Warner-Lambert",country:"US",cap:2.80,drugs:["Listerine","Benadryl","Lopid (dev)"]},
+    {company:"Abbott Laboratories",country:"US",cap:2.50,drugs:["Erythromycin","Nembutal","Tronolane"]},
+    {company:"Bristol-Myers",country:"US",cap:2.30,drugs:["Bufferin","Platinol (dev)","Capoten (dev)"]},
+    {company:"Johnson & Johnson",country:"US",cap:2.10,drugs:["Tylenol","Retin-A","Haldol"]},
+    {company:"Pfizer",country:"US",cap:1.90,drugs:["Vibramycin","Minipress","Feldene (dev)"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:1.70,drugs:["Lasix","Claforan (dev)","Trental"]},
+    {company:"Sterling Drug",country:"US",cap:1.50,drugs:["Bayer Aspirin","Streptokinase","Winthrop"]},
+    {company:"Sandoz",country:"CH",cap:1.40,drugs:["Hydergine","Methergine","Sandimmune (dev)"]},
+    {company:"Smith Kline & French",country:"US",cap:1.35,drugs:["Tagamet (dev)","Thorazine","Dyazide"]},
+    {company:"Ciba-Geigy",country:"CH",cap:1.30,drugs:["Voltaren (dev)","Tofranil","Tegretol"]},
+    {company:"Upjohn",country:"US",cap:1.20,drugs:["Motrin","Depo-Provera","Halcion"]},
+    {company:"Schering-Plough",country:"US",cap:1.10,drugs:["Celestone","Tinactin","Lotrimin"]},
+    {company:"Squibb",country:"US",cap:1.00,drugs:["Capoten (dev)","Pentids","Nystatin"]},
+    {company:"Bayer (pharma)",country:"DE",cap:.95,drugs:["Aspirin","Cipro (dev)","Adalat (dev)"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:.90,drugs:["Inderal","Nolvadex","Althesin"]},
+    {company:"Glaxo",country:"GB",cap:.85,drugs:["Ventolin","Betnovate","Zantac (dev)"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:.80,drugs:["Bisolvon","Alupent","Catapres"]},
+    {company:"Parke-Davis",country:"US",cap:.75,drugs:["Chloromycetin","Dilantin","Lopid (dev)"]},
+    {company:"Searle",country:"US",cap:.70,drugs:["Aldactone","Dramamine","Enovid"]},
+    {company:"Burroughs Wellcome",country:"GB",cap:.65,drugs:["Septra","Actifed","Zovirax (dev)"]},
+    {company:"Takeda",country:"JP",cap:.60,drugs:["Pantecin","Takepron (dev)","Lupron (dev)"]}
+  ]},
+  1975:{note:"estimated",footnote:"Tagamet (cimetidine) launched 1976 — first H2 blocker, first true blockbuster drug at $1B/yr. Synthroid, Motrin launched. OPEC shock hit chemical inputs. Wellcome's Zovirax pipeline. Hatch-Waxman (generics) still years away.",rows:[
+    {company:"American Home Products",country:"US",cap:6.00,drugs:["Premarin","Inderal","Dristan","Anacin"]},
+    {company:"Merck & Co.",country:"US",cap:5.50,drugs:["Indocin","Aldomet","Timoptic","Mevacor (dev)"]},
+    {company:"Hoffmann-La Roche",country:"CH",cap:5.00,drugs:["Valium","Librium","Rocephin","Bactrim"]},
+    {company:"Johnson & Johnson",country:"US",cap:4.20,drugs:["Tylenol","Retin-A","Haldol","Modane"]},
+    {company:"Eli Lilly",country:"US",cap:4.00,drugs:["Insulin","Darvon","Ceclor","Keflin"]},
+    {company:"Warner-Lambert",country:"US",cap:3.80,drugs:["Listerine","Benadryl","Lopid"]},
+    {company:"Bristol-Myers",country:"US",cap:3.50,drugs:["Bufferin","Capoten (dev)","Platinol"]},
+    {company:"Abbott Laboratories",country:"US",cap:3.20,drugs:["Erythromycin","Nembutal","Survanta (dev)"]},
+    {company:"Smith Kline & French",country:"US",cap:3.00,drugs:["Tagamet","Thorazine","Dyazide"]},
+    {company:"Pfizer",country:"US",cap:2.80,drugs:["Feldene","Minipress","Vibramycin"]},
+    {company:"Ciba-Geigy",country:"CH",cap:2.50,drugs:["Voltaren","Lopressor","Tofranil"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:2.30,drugs:["Lasix","Trental","Claforan"]},
+    {company:"Sandoz",country:"CH",cap:2.10,drugs:["Hydergine","Methergine","Parlodel"]},
+    {company:"Glaxo",country:"GB",cap:2.00,drugs:["Ventolin","Betnovate","Zantac (dev)"]},
+    {company:"Schering-Plough",country:"US",cap:1.90,drugs:["Celestone","Tinactin","Lotrimin"]},
+    {company:"Upjohn",country:"US",cap:1.80,drugs:["Motrin","Depo-Provera","Halcion"]},
+    {company:"Squibb",country:"US",cap:1.60,drugs:["Capoten (dev)","Pentids","Nystatin"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:1.50,drugs:["Inderal","Nolvadex","Tenormin"]},
+    {company:"Bayer (pharma)",country:"DE",cap:1.40,drugs:["Aspirin","Cipro (dev)","Adalat"]},
+    {company:"Burroughs Wellcome",country:"GB",cap:1.20,drugs:["Septra","Actifed","Zovirax (dev)"]},
+    {company:"Sterling Drug",country:"US",cap:1.10,drugs:["Bayer Aspirin","Midol","Streptokinase"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:1.00,drugs:["Bisolvon","Alupent","Catapres"]},
+    {company:"Searle",country:"US",cap:.90,drugs:["Aldactone","Dramamine","Calan (dev)"]},
+    {company:"Takeda",country:"JP",cap:.80,drugs:["Lupron (dev)","Pantecin","Takepron (dev)"]},
+    {company:"Beecham Group",country:"GB",cap:.70,drugs:["Amoxicillin","Augmentin (dev)","Broxil"]}
+  ]},
+  1980:{note:"estimated",footnote:"Blockbuster era launched. SmithKline's Tagamet dominated ulcer treatment. Merck's Mevacor (1987) began statin revolution. Eli Lilly's Prozac (1988) launched antidepressant era. Genentech IPO (1980) started biotech industry.",rows:[
+    {company:"Merck & Co.",country:"US",cap:14.0,drugs:["Mevacor","Vasotec","Pepcid"]},
+    {company:"American Home Products",country:"US",cap:9.5,drugs:["Premarin","Inderal","Advil"]},
+    {company:"Bristol-Myers",country:"US",cap:9.0,drugs:["Capoten","Platinol","Bufferin"]},
+    {company:"Eli Lilly",country:"US",cap:8.5,drugs:["Prozac","Humulin","Ceclor"]},
+    {company:"Abbott Laboratories",country:"US",cap:7.0,drugs:["Erythromycin","Nembutal","Clarithromycin"]},
+    {company:"Johnson & Johnson",country:"US",cap:6.8,drugs:["Tylenol","Retin-A","Haldol"]},
+    {company:"SmithKline Beckman",country:"US",cap:6.5,drugs:["Tagamet","Dyazide","Augmentin"]},
+    {company:"Warner-Lambert",country:"US",cap:5.5,drugs:["Lopid","Benadryl","Listerine"]},
+    {company:"Pfizer",country:"US",cap:5.0,drugs:["Feldene","Minipress","Procardia"]},
+    {company:"Glaxo",country:"GB",cap:4.8,drugs:["Zantac","Ventolin","Zinnat"]},
+    {company:"Hoffmann-La Roche",country:"CH",cap:4.5,drugs:["Valium","Rocephin","Bactrim"]},
+    {company:"Schering-Plough",country:"US",cap:4.0,drugs:["Intron A","Celestone","Lotrimin"]},
+    {company:"Upjohn",country:"US",cap:3.8,drugs:["Motrin","Halcion","Depo-Provera"]},
+    {company:"Sandoz",country:"CH",cap:3.5,drugs:["Sandimmune (cyclosporine)","Hydergine","Parlodel"]},
+    {company:"Ciba-Geigy",country:"CH",cap:3.2,drugs:["Voltaren","Tegretol","Lopressor"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:3.0,drugs:["Lasix","Claforan","Trental"]},
+    {company:"Bayer (pharma)",country:"DE",cap:2.8,drugs:["Adalat","Aspirin","Cipro"]},
+    {company:"Squibb",country:"US",cap:2.6,drugs:["Capoten","Nystatin","Theragran"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:2.4,drugs:["Inderal","Nolvadex","Tenormin"]},
+    {company:"Sterling Drug",country:"US",cap:2.2,drugs:["Bayer Aspirin","Midol","Winthrop"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:2.0,drugs:["Catapres","Bisolvon","Dulcolax"]},
+    {company:"Searle",country:"US",cap:1.8,drugs:["Aldactone","Calan","Dramamine"]},
+    {company:"Takeda",country:"JP",cap:1.6,drugs:["Lupron","Pantecin","Takepron (dev)"]},
+    {company:"Wellcome",country:"GB",cap:1.5,drugs:["Zovirax","Septra","Retrovir (dev)"]},
+    {company:"Beecham Group",country:"GB",cap:1.4,drugs:["Amoxicillin","Augmentin","Eminase"]}
+  ]},
+  1985:{note:"estimated",footnote:"Zantac surpassed Tagamet as world's top drug by 1986. Taxol isolated (1967) moved toward clinical use. Retrovir (AZT) launched 1987 for HIV. Genentech's Protropin first recombinant biotech drug. US pharma stocks surged in bull market.",rows:[
+    {company:"Merck & Co.",country:"US",cap:20.0,drugs:["Mevacor","Vasotec","Pepcid","Primaxin"]},
+    {company:"American Home Products",country:"US",cap:14.0,drugs:["Premarin","Inderal","Advil","Lodine"]},
+    {company:"Glaxo",country:"GB",cap:12.0,drugs:["Zantac","Ventolin","Zinnat","Becotide"]},
+    {company:"Bristol-Myers",country:"US",cap:11.5,drugs:["Capoten","Platinol","Bufferin","Pravachol (dev)"]},
+    {company:"Eli Lilly",country:"US",cap:11.0,drugs:["Prozac (dev)","Humulin","Ceclor","Kefzol"]},
+    {company:"SmithKline Beckman",country:"US",cap:10.5,drugs:["Tagamet","Dyazide","Augmentin","Relafen"]},
+    {company:"Johnson & Johnson",country:"US",cap:10.0,drugs:["Tylenol","Retin-A","Risperdal (dev)","Haldol"]},
+    {company:"Abbott Laboratories",country:"US",cap:9.0,drugs:["Erythromycin","Clarithromycin","Tranxene","Hytrin"]},
+    {company:"Pfizer",country:"US",cap:8.0,drugs:["Feldene","Procardia","Minipress","Diflucan (dev)"]},
+    {company:"Warner-Lambert",country:"US",cap:7.0,drugs:["Lopid","Benadryl","Listerine","Neurontin (dev)"]},
+    {company:"Hoffmann-La Roche",country:"CH",cap:6.5,drugs:["Valium","Rocephin","Bactrim","Roaccutane"]},
+    {company:"Schering-Plough",country:"US",cap:6.0,drugs:["Intron A","Claritin (dev)","Lotrimin","Celestone"]},
+    {company:"Ciba-Geigy",country:"CH",cap:5.5,drugs:["Voltaren","Tegretol","Lopressor","Estraderm"]},
+    {company:"Sandoz",country:"CH",cap:5.0,drugs:["Sandimmune","Hydergine","Parlodel","Clozaril (dev)"]},
+    {company:"Upjohn",country:"US",cap:4.8,drugs:["Motrin","Halcion","Depo-Provera","Rogaine"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:4.5,drugs:["Lasix","Trental","Claforan","Mexitil"]},
+    {company:"Bayer (pharma)",country:"DE",cap:4.2,drugs:["Cipro","Adalat","Aspirin","Kogenate (dev)"]},
+    {company:"Wellcome",country:"GB",cap:4.0,drugs:["Zovirax","Retrovir","Septra","Lanvis"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:3.8,drugs:["Tenormin","Nolvadex","Inderal","Zestril"]},
+    {company:"Squibb",country:"US",cap:3.5,drugs:["Capoten","Pravachol (dev)","Nystatin","Theragran"]},
+    {company:"Takeda",country:"JP",cap:3.0,drugs:["Lupron","Prevacid (dev)","Actos (dev)"]},
+    {company:"Beecham Group",country:"GB",cap:2.8,drugs:["Amoxicillin","Augmentin","Eminase","Relafen"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:2.5,drugs:["Catapres","Bisolvon","Dulcolax","Viramune (dev)"]},
+    {company:"Sterling Drug",country:"US",cap:2.2,drugs:["Bayer Aspirin","Midol","Winthrop","Streptokinase"]},
+    {company:"Amgen",country:"US",cap:1.5,drugs:["Epogen (dev)","Neupogen (dev)","Filgrastim (dev)"]}
+  ]},
+  1990:{note:"approximate",footnote:"Merck #1 in Rx sales globally. Blockbuster merger wave: Bristol-Myers+Squibb (1989), SmithKline Beckman+Beecham (1989). Glaxo's Zantac was world's top drug ($3.4B). Prozac a cultural phenomenon. Amgen's Epogen/Neupogen launched biotech era.",rows:[
+    {company:"Merck & Co.",country:"US",cap:28.0,drugs:["Zocor","Mevacor","Vasotec","Pepcid"]},
+    {company:"Bristol-Myers Squibb",country:"US",cap:22.0,drugs:["Capoten","Taxol","Pravachol","Bufferin"]},
+    {company:"Glaxo",country:"GB",cap:20.0,drugs:["Zantac","Ventolin","Imitrex (dev)"]},
+    {company:"SmithKline Beecham",country:"GB",cap:16.0,drugs:["Tagamet","Augmentin","Paxil (dev)"]},
+    {company:"American Home Products",country:"US",cap:15.0,drugs:["Premarin","Advil","Lodine"]},
+    {company:"Eli Lilly",country:"US",cap:13.5,drugs:["Prozac","Humulin","Ceclor"]},
+    {company:"Johnson & Johnson",country:"US",cap:13.0,drugs:["Tylenol","Retin-A","Risperdal"]},
+    {company:"Pfizer",country:"US",cap:10.0,drugs:["Feldene","Procardia","Diflucan"]},
+    {company:"Ciba-Geigy",country:"CH",cap:9.5,drugs:["Voltaren","Lopressor","Estraderm"]},
+    {company:"Hoechst (pharma)",country:"DE",cap:8.5,drugs:["Lasix","Trental","Claforan"]},
+    {company:"Abbott Laboratories",country:"US",cap:8.0,drugs:["Erythromycin","Clarithromycin","Hytrin"]},
+    {company:"Hoffmann-La Roche",country:"CH",cap:7.8,drugs:["Rocephin","Valium","Bactrim","Roaccutane"]},
+    {company:"Sandoz",country:"CH",cap:7.5,drugs:["Sandimmune","Parlodel","Hydergine"]},
+    {company:"Schering-Plough",country:"US",cap:7.0,drugs:["Intron A","Claritin","Lotrimin"]},
+    {company:"Upjohn",country:"US",cap:5.5,drugs:["Motrin","Halcion","Depo-Provera","Rogaine"]},
+    {company:"Warner-Lambert",country:"US",cap:5.2,drugs:["Lopid","Benadryl","Neurontin (dev)"]},
+    {company:"Bayer (pharma)",country:"DE",cap:5.0,drugs:["Cipro","Adalat","Aspirin"]},
+    {company:"Wellcome",country:"GB",cap:4.8,drugs:["Zovirax","Retrovir (AZT)","Septra"]},
+    {company:"ICI Pharmaceuticals",country:"GB",cap:4.5,drugs:["Tenormin","Nolvadex","Inderal"]},
+    {company:"Amgen",country:"US",cap:4.2,drugs:["Epogen","Neupogen","Filgrastim"]},
+    {company:"Rhône-Poulenc Rorer",country:"FR",cap:3.8,drugs:["Taxol (licensed)","Cardizem","Zagam"]},
+    {company:"Takeda",country:"JP",cap:3.5,drugs:["Lupron","Prevacid (dev)","Blopress"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:3.2,drugs:["Catapres","Bisolvon","Spiriva (dev)"]},
+    {company:"Marion Merrell Dow",country:"US",cap:3.0,drugs:["Cardizem","Seldane","Carafate"]},
+    {company:"Zeneca",country:"GB",cap:2.8,drugs:["Nolvadex","Tenormin","Zestril"]}
+  ]},
+  1995:{note:"approximate",footnote:"Mid-1990s biotech boom. Glaxo+Wellcome merger ($14B, 1995) formed GlaxoWellcome. Novartis formed from Ciba-Geigy+Sandoz (1996). Lipitor approved (1996). HIV cocktail therapy transformed AIDS treatment. Managed care drove US pharma cost pressure.",rows:[
+    {company:"Merck & Co.",country:"US",cap:80.0,drugs:["Zocor","Mevacor","Vasotec","Crixivan"]},
+    {company:"GlaxoWellcome",country:"GB",cap:70.0,drugs:["Zantac","Zovirax","Epivir","Retrovir"]},
+    {company:"Johnson & Johnson",country:"US",cap:55.0,drugs:["Tylenol","Risperdal","Procrit","Neutrogena"]},
+    {company:"Bristol-Myers Squibb",country:"US",cap:52.0,drugs:["Taxol","Pravachol","Capoten","Glucophage"]},
+    {company:"American Home Products",country:"US",cap:50.0,drugs:["Premarin","Enbrel (dev)","Effexor","Lodine"]},
+    {company:"Eli Lilly",country:"US",cap:40.0,drugs:["Prozac","Humulin","Gemzar","Zyprexa (dev)"]},
+    {company:"Pfizer",country:"US",cap:38.0,drugs:["Zoloft","Procardia","Diflucan","Lipitor (dev)"]},
+    {company:"Ciba-Geigy",country:"CH",cap:36.0,drugs:["Voltaren","Estraderm","Lopressor","Aredia"]},
+    {company:"Sandoz",country:"CH",cap:32.0,drugs:["Sandimmune","Parlodel","Clozaril","Lamisil"]},
+    {company:"Roche",country:"CH",cap:30.0,drugs:["Rocephin","Roaccutane","Hivid","Invirase"]},
+    {company:"Abbott Laboratories",country:"US",cap:25.0,drugs:["Biaxin","Hytrin","Clarithromycin","Ritonavir"]},
+    {company:"SmithKline Beecham",country:"GB",cap:40.0,drugs:["Augmentin","Paxil","Tagamet","Kytril"]},
+    {company:"Glaxo",country:"GB",cap:0.0,drugs:["(merged into GlaxoWellcome 1995)"]},
+    {company:"Schering-Plough",country:"US",cap:20.0,drugs:["Claritin","Intron A","Lotrimin","Eulexin"]},
+    {company:"Warner-Lambert",country:"US",cap:18.0,drugs:["Zoloft (partner)","Benadryl","Lipitor (dev)","Lopid"]},
+    {company:"Upjohn / Pharmacia",country:"US",cap:15.0,drugs:["Xalatan (dev)","Depo-Provera","Detrol (dev)"]},
+    {company:"Amgen",country:"US",cap:14.0,drugs:["Epogen","Neupogen","Infergen"]},
+    {company:"Zeneca",country:"GB",cap:13.0,drugs:["Nolvadex","Tenormin","Accolate"]},
+    {company:"Bayer (pharma)",country:"DE",cap:12.0,drugs:["Cipro","Adalat","Aspirin","Kogenate"]},
+    {company:"Hoechst Marion Roussel",country:"DE",cap:12.0,drugs:["Claforan","Trental","Cardizem","Allegra (dev)"]},
+    {company:"Takeda",country:"JP",cap:10.0,drugs:["Lupron","Prevacid","Actos (dev)"]},
+    {company:"Lilly Icos",country:"US",cap:0.0,drugs:["(Cialis dev)"]},
+    {company:"Biogen",country:"US",cap:5.0,drugs:["Avonex","Betaseron (partner)","Zevalin (dev)"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:8.0,drugs:["Catapres","Bisolvon","Spiriva (dev)","Viramune"]},
+    {company:"Genentech",country:"US",cap:4.5,drugs:["Herceptin (dev)","Rituxan (dev)","Pulmozyme","Actimmune"]}
+  ]},
+  2000:{note:"approximate",footnote:"Pfizer+Warner-Lambert ($90B) secured Lipitor — became history's best-selling drug. GlaxoSmithKline, Novartis, AstraZeneca, Aventis all formed by mega-mergers. Biotech blockbusters (Herceptin, Enbrel, Rituxan) transformed oncology/autoimmune.",rows:[
+    {company:"Pfizer",country:"US",cap:290.0,drugs:["Lipitor","Viagra","Zoloft","Norvasc"]},
+    {company:"GlaxoSmithKline",country:"GB",cap:185.0,drugs:["Paxil","Augmentin","Advair","Zantac"]},
+    {company:"Merck & Co.",country:"US",cap:168.0,drugs:["Zocor","Vioxx","Fosamax","Crixivan"]},
+    {company:"Johnson & Johnson",country:"US",cap:155.0,drugs:["Risperdal","Tylenol","Procrit","Remicade"]},
+    {company:"AstraZeneca",country:"GB",cap:90.0,drugs:["Prilosec","Seroquel","Atacand","Arimidex"]},
+    {company:"Novartis",country:"CH",cap:87.0,drugs:["Gleevec","Diovan","Voltaren","Neoral"]},
+    {company:"Bristol-Myers Squibb",country:"US",cap:80.0,drugs:["Plavix","Taxol","Pravachol","Glucophage"]},
+    {company:"Eli Lilly",country:"US",cap:75.0,drugs:["Prozac","Zyprexa","Gemzar","Evista"]},
+    {company:"Roche",country:"CH",cap:72.0,drugs:["Herceptin","Rituxan","Tamiflu","Avastin (dev)"]},
+    {company:"Wyeth (AHP)",country:"US",cap:70.0,drugs:["Premarin","Enbrel","Effexor","Prevnar"]},
+    {company:"Abbott Laboratories",country:"US",cap:62.0,drugs:["Humira (dev)","Biaxin","Kaletra","Synthroid"]},
+    {company:"Schering-Plough",country:"US",cap:55.0,drugs:["Claritin","Intron A","Remicade (partner)"]},
+    {company:"Aventis",country:"FR",cap:52.0,drugs:["Taxotere","Allegra","Lantus","Lovenox"]},
+    {company:"Pharmacia",country:"US",cap:50.0,drugs:["Celebrex","Detrol","Xalatan","Zyvox"]},
+    {company:"Amgen",country:"US",cap:48.0,drugs:["Epogen","Neupogen","Aranesp","Enbrel (partner)"]},
+    {company:"Takeda",country:"JP",cap:40.0,drugs:["Prevacid","Lupron","Actos","Blopress"]},
+    {company:"Bayer (pharma)",country:"DE",cap:35.0,drugs:["Cipro","Adalat","Aspirin","Levitra (dev)"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:30.0,drugs:["Spiriva (dev)","Catapres","Viramune"]},
+    {company:"Sanofi-Synthelabo",country:"FR",cap:28.0,drugs:["Plavix (partner)","Ambien","Aprovel"]},
+    {company:"Genentech",country:"US",cap:8.0,drugs:["Herceptin","Rituxan","Avastin (dev)","Nutropin"]},
+    {company:"Biogen",country:"US",cap:9.0,drugs:["Avonex","Zevalin","Rituxan (partner)"]},
+    {company:"Forest Labs",country:"US",cap:9.5,drugs:["Lexapro","Celexa","Namenda (dev)"]},
+    {company:"Gilead Sciences",country:"US",cap:5.0,drugs:["Viread","Vistide","AmBisome","Truvada (dev)"]},
+    {company:"Allergan",country:"US",cap:10.0,drugs:["Botox","Lumigan","Alphagan"]},
+    {company:"Medimmune",country:"US",cap:8.5,drugs:["FluMist","Synagis","Ethyol"]}
+  ]},
+  2005:{note:"approximate",footnote:"Pfizer world's largest pharma by sales ($44.3B) but facing Lipitor patent looming. Vioxx withdrawn (2004) — largest drug recall in history. Biotech biologics surging. Sanofi-Aventis formed. Herceptin, Avastin, Rituxan transformed oncology.",rows:[
+    {company:"Pfizer",country:"US",cap:200.0,drugs:["Lipitor","Norvasc","Celebrex","Lyrica"]},
+    {company:"GlaxoSmithKline",country:"GB",cap:155.0,drugs:["Advair","Paxil","Augmentin","Avandia"]},
+    {company:"Johnson & Johnson",country:"US",cap:185.0,drugs:["Risperdal","Remicade","Procrit","Tylenol"]},
+    {company:"Novartis",country:"CH",cap:130.0,drugs:["Gleevec","Diovan","Zometa","Zelnorm"]},
+    {company:"Roche",country:"CH",cap:120.0,drugs:["Avastin","Herceptin","Rituxan","Tamiflu"]},
+    {company:"Merck & Co.",country:"US",cap:105.0,drugs:["Zocor","Singulair","Fosamax","Cozaar"]},
+    {company:"AstraZeneca",country:"GB",cap:90.0,drugs:["Crestor","Seroquel","Nexium","Symbicort"]},
+    {company:"Sanofi-Aventis",country:"FR",cap:85.0,drugs:["Plavix","Lovenox","Lantus","Taxotere"]},
+    {company:"Abbott Laboratories",country:"US",cap:70.0,drugs:["Humira","Biaxin","Kaletra","TriCor"]},
+    {company:"Wyeth",country:"US",cap:60.0,drugs:["Enbrel","Effexor","Prevnar","Premarin"]},
+    {company:"Bristol-Myers Squibb",country:"US",cap:55.0,drugs:["Plavix","Pravachol","Avapro","Baraclude"]},
+    {company:"Eli Lilly",country:"US",cap:55.0,drugs:["Zyprexa","Cymbalta","Gemzar","Alimta"]},
+    {company:"Amgen",country:"US",cap:75.0,drugs:["Enbrel","Aranesp","Neulasta","Prolia (dev)"]},
+    {company:"Schering-Plough",country:"US",cap:30.0,drugs:["Vytorin","Remicade (partner)","Nasonex","PegIntron"]},
+    {company:"Bayer (pharma)",country:"DE",cap:28.0,drugs:["Yaz","Kogenate","Betaferon","Cipro"]},
+    {company:"Takeda",country:"JP",cap:40.0,drugs:["Actos","Prevacid","Lupron","Daxas (dev)"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:22.0,drugs:["Spiriva","Mobic","Viramune","Aggrenox"]},
+    {company:"Allergan",country:"US",cap:15.0,drugs:["Botox","Lumigan","Restasis","Juvederm"]},
+    {company:"Biogen Idec",country:"US",cap:14.0,drugs:["Avonex","Tysabri","Rituxan (partner)"]},
+    {company:"Gilead Sciences",country:"US",cap:22.0,drugs:["Truvada","Emtriva","Viread","Hepsera"]},
+    {company:"Celgene",country:"US",cap:8.0,drugs:["Revlimid","Thalomid","Alkeran"]},
+    {company:"Genentech",country:"US",cap:90.0,drugs:["Avastin","Herceptin","Rituxan","Tarceva"]},
+    {company:"Shire",country:"IE",cap:10.0,drugs:["Adderall XR","Lialda (dev)","Fosrenol"]},
+    {company:"Forest Labs",country:"US",cap:10.0,drugs:["Lexapro","Namenda","Campral"]},
+    {company:"Cephalon",country:"US",cap:5.0,drugs:["Provigil","Actiq","Nuvigil (dev)"]}
+  ]},
+  2010:{note:"approximate",footnote:"Pfizer acquired Wyeth ($68B, 2009). Lipitor patent cliff (2011) loomed. Biologic drugs dominated growth. Humira became world's top drug. Biotech-pharma merger wave continued. Roche's oncology troika (Avastin/Herceptin/Rituxan) near peak.",rows:[
+    {company:"Johnson & Johnson",country:"US",cap:173.0,drugs:["Remicade","Risperdal","Velcade","Stelara"]},
+    {company:"Pfizer",country:"US",cap:148.0,drugs:["Lipitor","Lyrica","Enbrel","Prevnar"]},
+    {company:"Roche",country:"CH",cap:145.0,drugs:["Avastin","Herceptin","Rituxan","Tamiflu"]},
+    {company:"Novartis",country:"CH",cap:130.0,drugs:["Gleevec","Diovan","Zometa","Lucentis"]},
+    {company:"Merck & Co.",country:"US",cap:115.0,drugs:["Singulair","Januvia","Gardasil","Cozaar"]},
+    {company:"GlaxoSmithKline",country:"GB",cap:100.0,drugs:["Advair","Avandia","Paxil","Lovaza"]},
+    {company:"AstraZeneca",country:"GB",cap:70.0,drugs:["Crestor","Seroquel","Symbicort","Faslodex"]},
+    {company:"Abbott Laboratories",country:"US",cap:65.0,drugs:["Humira","TriCor","Niaspan","Depakote"]},
+    {company:"Bristol-Myers Squibb",country:"US",cap:58.0,drugs:["Plavix","Abilify","Opdivo (dev)","Baraclude"]},
+    {company:"Eli Lilly",country:"US",cap:42.0,drugs:["Zyprexa","Cymbalta","Alimta","Evista"]},
+    {company:"Amgen",country:"US",cap:55.0,drugs:["Enbrel","Aranesp","Neulasta","Prolia"]},
+    {company:"Sanofi",country:"FR",cap:95.0,drugs:["Plavix (partner)","Lantus","Lovenox","Multaq"]},
+    {company:"Takeda",country:"JP",cap:38.0,drugs:["Prevacid","Actos","Lupron","Daxas (dev)"]},
+    {company:"Bayer (pharma)",country:"DE",cap:35.0,drugs:["Yaz","Kogenate","Betaferon","Xarelto (dev)"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:25.0,drugs:["Spiriva","Pradaxa","Aggrenox","Twynsta"]},
+    {company:"Allergan",country:"US",cap:18.0,drugs:["Botox","Lumigan","Restasis","Juvederm"]},
+    {company:"Biogen",country:"US",cap:17.0,drugs:["Avonex","Tysabri","Rituxan (partner)"]},
+    {company:"Gilead Sciences",country:"US",cap:30.0,drugs:["Atripla","Truvada","Viread","AmBisome"]},
+    {company:"Celgene",country:"US",cap:25.0,drugs:["Revlimid","Thalomid","Abraxane"]},
+    {company:"Shire",country:"IE",cap:14.0,drugs:["Vyvanse","Adderall XR","Lialda","Fosrenol"]},
+    {company:"Forest Labs",country:"US",cap:8.5,drugs:["Lexapro","Namenda","Bystolic","Savella"]},
+    {company:"Regeneron",country:"US",cap:5.0,drugs:["VEGF Trap (dev)","Zaltrap (dev)","Arcalyst"]},
+    {company:"Vertex Pharmaceuticals",country:"US",cap:8.0,drugs:["Incivek (dev)","Kalydeco (dev)","Telaprevir"]},
+    {company:"Warner Chilcott",country:"IE",cap:5.5,drugs:["Asacol","Loestrin","Doryx","Femring"]},
+    {company:"Perrigo",country:"IE",cap:4.0,drugs:["OTC generics","Store-brand medicines","Nutritionals"]}
+  ]},
+  2015:{note:"approximate",footnote:"AbbVie (spun from Abbott 2013) surged on Humira ($14B peak). Immuno-oncology revolution: Keytruda, Opdivo launched. Sovaldi/Harvoni cured Hep C ($84K/course controversy). Allergan+Actavis megamerger. Gilead briefly worth $160B.",rows:[
+    {company:"Johnson & Johnson",country:"US",cap:265.0,drugs:["Remicade","Stelara","Velcade","Xarelto"]},
+    {company:"Roche",country:"CH",cap:250.0,drugs:["Avastin","Herceptin","MabThera","Perjeta"]},
+    {company:"Pfizer",country:"US",cap:210.0,drugs:["Lyrica","Prevnar 13","Enbrel","Ibrance"]},
+    {company:"Novartis",country:"CH",cap:200.0,drugs:["Gleevec","Cosentyx","Tasigna","Lucentis"]},
+    {company:"Merck & Co.",country:"US",cap:155.0,drugs:["Keytruda","Januvia","Gardasil","Zetia"]},
+    {company:"AbbVie",country:"US",cap:130.0,drugs:["Humira","Viekira Pak","Imbruvica"]},
+    {company:"AstraZeneca",country:"GB",cap:100.0,drugs:["Crestor","Symbicort","Brilinta","Tagrisso"]},
+    {company:"GlaxoSmithKline",country:"GB",cap:100.0,drugs:["Advair","Shingrix (dev)","Malarone","Benlysta"]},
+    {company:"Novo Nordisk",country:"DK",cap:95.0,drugs:["Victoza","Tresiba","NovoRapid","Saxenda"]},
+    {company:"Bristol-Myers Squibb",country:"US",cap:90.0,drugs:["Opdivo","Eliquis","Sprycel","Yervoy"]},
+    {company:"Sanofi",country:"FR",cap:115.0,drugs:["Lantus","Lovenox","Dupixent (dev)","Praluent"]},
+    {company:"Amgen",country:"US",cap:115.0,drugs:["Enbrel","Neulasta","Prolia","Repatha"]},
+    {company:"Eli Lilly",country:"US",cap:80.0,drugs:["Cymbalta","Alimta","Humalog","Trulicity (dev)"]},
+    {company:"Allergan",country:"IE",cap:75.0,drugs:["Botox","Restasis","Namenda","Ozurdex"]},
+    {company:"Gilead Sciences",country:"US",cap:155.0,drugs:["Sovaldi","Harvoni","Atripla","Truvada"]},
+    {company:"Celgene",country:"US",cap:85.0,drugs:["Revlimid","Otezla","Pomalyst","Abraxane"]},
+    {company:"Biogen",country:"US",cap:70.0,drugs:["Tecfidera","Tysabri","Avonex","Plegridy"]},
+    {company:"Takeda",country:"JP",cap:40.0,drugs:["Velcade","Entyvio","Dexilant","Trintellix"]},
+    {company:"Bayer (pharma)",country:"DE",cap:38.0,drugs:["Xarelto","Eylea (partner)","Kogenate","Yaz"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:22.0,drugs:["Spiriva","Pradaxa","Jardiance","Ofev"]},
+    {company:"Shire",country:"IE",cap:35.0,drugs:["Vyvanse","Cinryze","Firazyr","Lialda"]},
+    {company:"Regeneron",country:"US",cap:40.0,drugs:["Eylea","Praluent","Dupixent (dev)","Zaltrap"]},
+    {company:"Vertex Pharmaceuticals",country:"US",cap:22.0,drugs:["Kalydeco","Orkambi","Incivek"]},
+    {company:"Mylan",country:"US",cap:18.0,drugs:["EpiPen","Generic portfolio","Copaxone generic"]},
+    {company:"Endo International",country:"IE",cap:12.0,drugs:["Percocet","Voltaren Gel","Vantas","Lidoderm"]}
+  ]},
+  2020:{note:"approximate",footnote:"COVID-19 transformed pharma — mRNA vaccines (Pfizer/BioNTech, Moderna) developed in 11 months. Merck's Keytruda became world's top drug ($14.4B). GLP-1 pipelines attracted enormous investor attention. Gilead's remdesivir was first COVID treatment.",rows:[
+    {company:"Johnson & Johnson",country:"US",cap:380.0,drugs:["Stelara","Darzalex","Imbruvica","COVID vaccine"]},
+    {company:"Roche",country:"CH",cap:295.0,drugs:["Ocrevus","Hemlibra","Perjeta","Tecentriq"]},
+    {company:"Novartis",country:"CH",cap:200.0,drugs:["Cosentyx","Zolgensma","Entresto","Kisqali"]},
+    {company:"Pfizer",country:"US",cap:195.0,drugs:["Ibrance","Eliquis","Prevnar","COVID vaccine"]},
+    {company:"Merck & Co.",country:"US",cap:195.0,drugs:["Keytruda","Gardasil 9","Januvia","Molnupiravir"]},
+    {company:"AbbVie",country:"US",cap:175.0,drugs:["Humira","Imbruvica","Rinvoq","Skyrizi"]},
+    {company:"AstraZeneca",country:"GB",cap:155.0,drugs:["Tagrisso","Imfinzi","Farxiga","COVID vaccine"]},
+    {company:"Bristol-Myers Squibb",country:"US",cap:150.0,drugs:["Opdivo","Eliquis","Revlimid","Yervoy"]},
+    {company:"Eli Lilly",country:"US",cap:130.0,drugs:["Trulicity","Taltz","Verzenio","Donanemab (dev)"]},
+    {company:"Novo Nordisk",country:"DK",cap:115.0,drugs:["Ozempic","Victoza","Rybelsus","NovoRapid"]},
+    {company:"Sanofi",country:"FR",cap:130.0,drugs:["Dupixent","Lantus","Kevzara","Aubagio"]},
+    {company:"Amgen",country:"US",cap:140.0,drugs:["Enbrel","Repatha","Otezla","Prolia"]},
+    {company:"GlaxoSmithKline",country:"GB",cap:90.0,drugs:["Shingrix","Trelegy","Benlysta","Cabenuva"]},
+    {company:"Gilead Sciences",country:"US",cap:85.0,drugs:["Biktarvy","Remdesivir","Veklury","Descovy"]},
+    {company:"Biogen",country:"US",cap:65.0,drugs:["Tecfidera","Spinraza","Tysabri","Aducanumab (dev)"]},
+    {company:"Regeneron",country:"US",cap:60.0,drugs:["Dupixent","Eylea","REGN-COV2","Kevzara"]},
+    {company:"Bayer (pharma)",country:"DE",cap:55.0,drugs:["Xarelto","Eylea (partner)","Nubeqa","Kerendia"]},
+    {company:"Takeda",country:"JP",cap:50.0,drugs:["Entyvio","Vyvanse","Ninlaro","Trintellix"]},
+    {company:"Vertex Pharmaceuticals",country:"US",cap:55.0,drugs:["Trikafta","Symdeko","Kalydeco","Orkambi"]},
+    {company:"Moderna",country:"US",cap:60.0,drugs:["mRNA-1273 COVID vaccine","mRNA-1647 (dev)"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:28.0,drugs:["Jardiance","Ofev","Spiriva","Pradaxa"]},
+    {company:"Daiichi Sankyo",country:"JP",cap:30.0,drugs:["Enhertu","Lixiana","Prevymis","Tarlige"]},
+    {company:"Alexion",country:"US",cap:25.0,drugs:["Soliris","Ultomiris","Strensiq","Kanuma"]},
+    {company:"CSL Behring",country:"AU",cap:22.0,drugs:["Privigen","Hizentra","Berinert","Kcentra"]},
+    {company:"Seagen",country:"US",cap:22.0,drugs:["Adcetris","Padcev","Tukysa","Tivdak (dev)"]}
+  ]},
+  2025:{note:"",footnote:"GLP-1 revolution drove Eli Lilly from $130B (2020) to ~$750B — largest 5-year value creation in pharma history; briefly crossed $1 trillion. Pfizer fell post-COVID. Novo Nordisk's Ozempic/Wegovy created $60B+ annual obesity market. ADC drugs (Enhertu) emerged as next oncology frontier.",rows:[
+    {company:"Eli Lilly",country:"US",cap:750.0,drugs:["Mounjaro","Zepbound","Verzenio","Kisunla"]},
+    {company:"Johnson & Johnson",country:"US",cap:390.0,drugs:["Darzalex","Stelara","Carvykti","Tremfya"]},
+    {company:"AbbVie",country:"US",cap:330.0,drugs:["Skyrizi","Rinvoq","Imbruvica","Humira"]},
+    {company:"Novo Nordisk",country:"DK",cap:320.0,drugs:["Ozempic","Wegovy","Victoza","Tresiba"]},
+    {company:"AstraZeneca",country:"GB",cap:280.0,drugs:["Tagrisso","Farxiga","Imfinzi","Enhertu (partner)"]},
+    {company:"Merck & Co.",country:"US",cap:210.0,drugs:["Keytruda","Gardasil 9","Winrevair","Januvia"]},
+    {company:"Novartis",country:"CH",cap:210.0,drugs:["Cosentyx","Kisqali","Kesimpta","Pluvicto"]},
+    {company:"Roche",country:"CH",cap:200.0,drugs:["Ocrevus","Hemlibra","Vabysmo","Polivy"]},
+    {company:"Bristol-Myers Squibb",country:"US",cap:140.0,drugs:["Opdivo","Eliquis","Revlimid","Reblozyl"]},
+    {company:"Pfizer",country:"US",cap:135.0,drugs:["Paxlovid","Prevnar 20","Eliquis","Nurtec"]},
+    {company:"Sanofi",country:"FR",cap:130.0,drugs:["Dupixent","Beyfortus","Altuviiio","Sarclisa"]},
+    {company:"Amgen",country:"US",cap:170.0,drugs:["Repatha","Prolia","Enbrel","MariTide (dev)"]},
+    {company:"GlaxoSmithKline",country:"GB",cap:80.0,drugs:["Shingrix","Arexvy","Jemperli","Trelegy"]},
+    {company:"Gilead Sciences",country:"US",cap:95.0,drugs:["Biktarvy","Sunlenca","Trodelvy","Veklury"]},
+    {company:"Regeneron",country:"US",cap:80.0,drugs:["Dupixent","Eylea HD","Kevzara","Libtayo"]},
+    {company:"Vertex Pharmaceuticals",country:"US",cap:130.0,drugs:["Trikafta","Casgevy","Journavx","Alyftrek"]},
+    {company:"Moderna",country:"US",cap:45.0,drugs:["mRNA-1283 COVID","mRESVIA","mRNA-4157 (dev)"]},
+    {company:"Daiichi Sankyo",country:"JP",cap:60.0,drugs:["Enhertu","Dato-DXd","Lixiana","Vanflyta"]},
+    {company:"Bayer (pharma)",country:"DE",cap:30.0,drugs:["Xarelto","Nubeqa","Kerendia","Eylea"]},
+    {company:"Takeda",country:"JP",cap:45.0,drugs:["Entyvio","Vyvanse","Fruzaqla","Adstiladrin"]},
+    {company:"Boehringer Ingelheim",country:"DE",cap:28.0,drugs:["Jardiance","Ofev","Spevigo","Trajenta"]},
+    {company:"UCB",country:"BE",cap:25.0,drugs:["Bimzelx","Evenity","Briviact","Vimpat"]},
+    {company:"Biogen",country:"US",cap:28.0,drugs:["Leqembi","Tysabri","Spinraza","Skyclarys"]},
+    {company:"CSL Behring",country:"AU",cap:90.0,drugs:["Hemgenix","Privigen","Hizentra","Berinert"]},
+    {company:"Astellas Pharma",country:"JP",cap:22.0,drugs:["Xtandi","Padcev","Xospata","Vyloy"]}
+  ]}
+};
+
+const FLAGS={US:"🇺🇸",GB:"🇬🇧",CH:"🇨🇭",DE:"🇩🇪",DK:"🇩🇰",FR:"🇫🇷",JP:"🇯🇵",IE:"🇮🇪",AU:"🇦🇺",BE:"🇧🇪"};
+const YEARS=[1950,1955,1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2020,2025];
+const EARLY=[1950,1955,1960,1965,1970,1975,1980,1985,1990,1995];
+const MODERN=[2000,2005,2010,2015,2020,2025];
+let active=2025,hmSortYear=null;
+
+const LINEAGE={
+  bms:{
+    chart:`flowchart TD
+  BM["Bristol-Myers\n(1858)"]
+  SQ["Squibb\n(1858)"]
+  BMS["Bristol-Myers Squibb\n(merged 1989)"]
+  CEL["Celgene\n(acquired 2019)"]
+  BM -->|merged 1989| BMS
+  SQ -->|merged 1989| BMS
+  BMS -->|acquired 2019| CEL`,
+    nodes:{"Bristol-Myers":"BM","Squibb":"SQ","Bristol-Myers Squibb":"BMS","Celgene":"CEL"}
+  },
+  gsk:{
+    chart:`flowchart TD
+  SKF["Smith Kline & French\n(1830)"]
+  SKB["SmithKline Beckman\n(merged 1982)"]
+  BEE["Beecham Group\n(1859)"]
+  SKBE["SmithKline Beecham\n(merged 1989)"]
+  GL["Glaxo\n(1873)"]
+  WEL["Burroughs Wellcome /\nWellcome"]
+  GW["GlaxoWellcome\n(merged 1995)"]
+  GSK["GlaxoSmithKline\n(merged 2000)"]
+  SKF --> SKB
+  SKB -->|merged| SKBE
+  BEE -->|merged| SKBE
+  SKBE -->|merged| GSK
+  GL -->|merged| GW
+  WEL -->|merged| GW
+  GW -->|merged| GSK`,
+    nodes:{"Smith Kline & French":"SKF","SmithKline Beckman":"SKB","Beecham Group":"BEE","SmithKline Beecham":"SKBE","Glaxo":"GL","Burroughs Wellcome":"WEL","Wellcome":"WEL","GlaxoWellcome":"GW","GlaxoSmithKline":"GSK"}
+  },
+  pfizer:{
+    chart:`flowchart TD
+  PFE["Pfizer\n(1849)"]
+  PD["Parke-Davis\n(WL subsidiary)"]
+  WL["Warner-Lambert\n(acquired 2000)"]
+  UPJ["Upjohn / Pharmacia"]
+  PHM["Pharmacia\n(acquired 2003)"]
+  AHP["American Home Products /\nWyeth (AHP)"]
+  WYE["Wyeth\n(acquired 2009)"]
+  SEA["Seagen\n(acquired 2023)"]
+  PD -->|subsidiary| WL
+  WL -->|acquired by| PFE
+  UPJ -->|renamed| PHM
+  PHM -->|acquired by| PFE
+  AHP -->|renamed| WYE
+  WYE -->|acquired by| PFE
+  SEA -->|acquired by| PFE`,
+    nodes:{"Pfizer":"PFE","Parke-Davis":"PD","Warner-Lambert":"WL","Upjohn":"UPJ","Upjohn / Pharmacia":"UPJ","Pharmacia":"PHM","American Home Products":"AHP","Wyeth (AHP)":"AHP","Wyeth":"WYE","Seagen":"SEA"}
+  },
+  sanofi:{
+    chart:`flowchart TD
+  HO["Hoechst Pharma\n(1863)"]
+  MMD["Marion Merrell Dow\n(formed 1989)"]
+  HMR["Hoechst Marion Roussel\n(merged 1995)"]
+  MB["May & Baker\n(RP subsidiary)"]
+  RPR["Rhône-Poulenc Rorer\n(1990)"]
+  AVE["Aventis\n(merged 1999)"]
+  SS["Sanofi-Synthelabo\n(1999)"]
+  SA["Sanofi-Aventis\n(merged 2004)"]
+  SAN["Sanofi\n(renamed 2011)"]
+  ST["Sterling Drug\n(acquired 1994)"]
+  HO --> MMD --> HMR -->|merged| AVE
+  MB -->|part of| RPR
+  RPR -->|merged| AVE
+  AVE -->|merged| SA
+  SS -->|merged| SA
+  SA -->|renamed| SAN
+  ST -->|acquired by| SAN`,
+    nodes:{"Hoechst (pharma)":"HO","Marion Merrell Dow":"MMD","Hoechst Marion Roussel":"HMR","May & Baker":"MB","Rhône-Poulenc Rorer":"RPR","Aventis":"AVE","Sanofi-Synthelabo":"SS","Sanofi-Aventis":"SA","Sanofi":"SAN","Sterling Drug":"ST"}
+  },
+  novartis:{
+    chart:`flowchart TD
+  CI["Ciba\n(1859)"]
+  GE["Geigy\n(1758)"]
+  CG["Ciba-Geigy\n(merged 1970)"]
+  SA["Sandoz\n(1886)"]
+  NVS["Novartis\n(merged 1996)"]
+  CI -->|merged| CG
+  GE -->|merged| CG
+  CG -->|merged| NVS
+  SA -->|merged| NVS`,
+    nodes:{"Ciba":"CI","Geigy":"GE","Ciba-Geigy":"CG","Sandoz":"SA","Novartis":"NVS"}
+  },
+  roche:{
+    chart:`flowchart TD
+  HLR["Hoffmann-La Roche\n(1896)"]
+  RUS["Roche US ops"]
+  GNE["Genentech\n(majority 1990,\nfull acquisition 2009)"]
+  ROC["Roche\n(present)"]
+  HLR --> RUS
+  HLR --> ROC
+  GNE -->|acquired by| ROC`,
+    nodes:{"Hoffmann-La Roche":"HLR","Roche (US ops)":"RUS","Roche":"ROC","Genentech":"GNE"}
+  },
+  astrazeneca:{
+    chart:`flowchart TD
+  ICI["ICI Pharmaceuticals\n(1926)"]
+  ZEN["Zeneca\n(demerged 1993)"]
+  ASTR["Astra AB\n(1913)"]
+  AZ["AstraZeneca\n(merged 1999)"]
+  MED["MedImmune\n(acquired 2007)"]
+  ICI -->|demerged| ZEN
+  ZEN -->|merged| AZ
+  ASTR -->|merged| AZ
+  AZ -->|acquired| MED`,
+    nodes:{"ICI Pharmaceuticals":"ICI","Zeneca":"ZEN","AstraZeneca":"AZ","Medimmune":"MED"}
+  },
+  merck:{
+    chart:`flowchart TD
+  SCH["Schering Corp.\n(1851)"]
+  SP["Schering-Plough\n(merged with Plough 1971)"]
+  MRK["Merck & Co.\n(acquired SP 2009)"]
+  SCH -->|merged| SP
+  SP -->|acquired by| MRK`,
+    nodes:{"Schering Corp.":"SCH","Schering-Plough":"SP","Merck & Co.":"MRK"}
+  },
+  abbvie:{
+    chart:`flowchart TD
+  ABT["Abbott Laboratories\n(1888)"]
+  ABBV["AbbVie\n(spun off 2013)"]
+  ALL["Allergan\n(acquired 2020)"]
+  ABT -->|spun off| ABBV
+  ABBV -->|acquired| ALL`,
+    nodes:{"Abbott Laboratories":"ABT","AbbVie":"ABBV","Allergan":"ALL"}
+  },
+  takeda:{
+    chart:`flowchart TD
+  TAK["Takeda\n(1781)"]
+  SHI["Shire\n(acquired 2019)"]
+  TAK -->|acquired| SHI`,
+    nodes:{"Takeda":"TAK","Shire":"SHI"}
+  },
+  biogen:{
+    chart:`flowchart TD
+  BG["Biogen\n(founded 1978)"]
+  BGI["Biogen Idec\n(merged with IDEC 2003)"]
+  BG2["Biogen\n(renamed 2015)"]
+  BG --> BGI --> BG2`,
+    nodes:{"Biogen":"BG","Biogen Idec":"BGI"}
+  }
+};
+
+const CO_FAMILY={
+  "Bristol-Myers":"bms","Squibb":"bms","Bristol-Myers Squibb":"bms","Celgene":"bms",
+  "Smith Kline & French":"gsk","SmithKline Beckman":"gsk","SmithKline Beecham":"gsk",
+  "Beecham Group":"gsk","Glaxo":"gsk","GlaxoWellcome":"gsk","Wellcome":"gsk",
+  "Burroughs Wellcome":"gsk","GlaxoSmithKline":"gsk",
+  "Pfizer":"pfizer","Warner-Lambert":"pfizer","Parke-Davis":"pfizer",
+  "Pharmacia":"pfizer","Upjohn":"pfizer","Upjohn / Pharmacia":"pfizer",
+  "Wyeth":"pfizer","Wyeth (AHP)":"pfizer","American Home Products":"pfizer","Seagen":"pfizer",
+  "Hoechst (pharma)":"sanofi","Marion Merrell Dow":"sanofi","Hoechst Marion Roussel":"sanofi",
+  "Rhône-Poulenc Rorer":"sanofi","May & Baker":"sanofi","Aventis":"sanofi",
+  "Sanofi-Synthelabo":"sanofi","Sanofi-Aventis":"sanofi","Sanofi":"sanofi","Sterling Drug":"sanofi",
+  "Ciba":"novartis","Geigy":"novartis","Ciba-Geigy":"novartis","Sandoz":"novartis","Novartis":"novartis",
+  "Hoffmann-La Roche":"roche","Roche (US ops)":"roche","Roche":"roche","Genentech":"roche",
+  "ICI Pharmaceuticals":"astrazeneca","Zeneca":"astrazeneca","AstraZeneca":"astrazeneca","Medimmune":"astrazeneca",
+  "Schering Corp.":"merck","Schering-Plough":"merck","Merck & Co.":"merck",
+  "Abbott Laboratories":"abbvie","AbbVie":"abbvie","Allergan":"abbvie",
+  "Takeda":"takeda","Shire":"takeda",
+  "Biogen":"biogen","Biogen Idec":"biogen"
+};
+
+// CPI-U multipliers: convert nominal year-Y dollars → 2025 dollars
+const CPI_MULT={1950:13.04,1955:11.72,1960:10.61,1965:9.97,1970:8.10,1975:5.84,1980:3.81,1985:2.92,1990:2.40,1995:2.06,2000:1.82,2005:1.61,2010:1.44,2015:1.33,2020:1.21,2025:1.00};
+
+const FAMILY_META={
+  bms:      {label:'Bristol-Myers Squibb',color:'#4f46e5'},
+  gsk:      {label:'GSK / Glaxo',         color:'#16a34a'},
+  pfizer:   {label:'Pfizer',              color:'#7c3aed'},
+  sanofi:   {label:'Sanofi / Aventis',    color:'#d97706'},
+  novartis: {label:'Novartis / Ciba',     color:'#dc2626'},
+  roche:    {label:'Roche / Genentech',   color:'#db2777'},
+  astrazeneca:{label:'AstraZeneca',       color:'#0891b2'},
+  merck:    {label:'Merck / Schering',    color:'#84cc16'},
+  abbvie:   {label:'AbbVie / Abbott',     color:'#ea580c'},
+  takeda:   {label:'Takeda / Shire',      color:'#0d9488'},
+  biogen:   {label:'Biogen',              color:'#6366f1'},
+};
+const STANDALONE_COLOR='#a39b90';
+
+function fmtAdj(b){if(b>=1000)return'$'+b.toFixed(0)+'B';if(b>=100)return'$'+Math.round(b)+'B';if(b>=10)return'$'+b.toFixed(1)+'B';if(b>=1)return'$'+b.toFixed(2)+'B';return'$'+(b*1000).toFixed(0)+'M';}
+
+let bubbleBuilt=false;
+function buildBubble(){
+  if(bubbleBuilt)return;bubbleBuilt=true;
+  const wrap=document.getElementById('bubble-wrap');
+  const legendEl=document.getElementById('bubble-legend');
+  const NS='http://www.w3.org/2000/svg';
+  const margin={top:24,right:28,bottom:56,left:76};
+  const totalW=Math.max(wrap.clientWidth||960,720);
+  const H=540;
+  const iW=totalW-margin.left-margin.right;
+  const iH=H-margin.top-margin.bottom;
+
+  // Collect & compute all points
+  const pts=[];
+  YEARS.forEach(y=>{
+    const rows=data[y].rows.filter(r=>r.cap>0);
+    rows.forEach((r,i)=>{
+      const adj=r.cap*CPI_MULT[y];
+      pts.push({year:y,company:r.company,country:r.country,origCap:r.cap,adj,rank:i+1,drugs:r.drugs});
+    });
+  });
+  const maxAdj=Math.max(...pts.map(p=>p.adj));
+
+  // Scales
+  const yearMin=1950,yearMax=2025,yearSpan=yearMax-yearMin;
+  const xPad=3; // years of visual padding on each side
+  const xScale=y=>margin.left+(y-yearMin+xPad)/(yearSpan+2*xPad)*iW;
+
+  const logMin=Math.log10(0.35),logMax=Math.log10(1150);
+  const yScale=cap=>margin.top+(1-(Math.log10(Math.max(cap,0.35))-logMin)/(logMax-logMin))*iH;
+
+  const maxR=36;
+  const rScale=cap=>Math.max(4,maxR*Math.sqrt(cap/maxAdj));
+
+  // SVG
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('width',totalW);svg.setAttribute('height',H);
+  svg.style.cssText='display:block;font-family:\'DM Mono\',monospace;';
+
+  // Background
+  const bgRect=document.createElementNS(NS,'rect');
+  bgRect.setAttribute('width',totalW);bgRect.setAttribute('height',H);
+  bgRect.setAttribute('fill','#faf8f3');svg.appendChild(bgRect);
+
+  // Plot area clip
+  const defs=document.createElementNS(NS,'defs');
+  const clip=document.createElementNS(NS,'clipPath');clip.setAttribute('id','bclip');
+  const clipR=document.createElementNS(NS,'rect');
+  clipR.setAttribute('x',margin.left);clipR.setAttribute('y',margin.top);
+  clipR.setAttribute('width',iW);clipR.setAttribute('height',iH);
+  clip.appendChild(clipR);defs.appendChild(clip);svg.appendChild(defs);
+
+  // Era divider (estimated vs reported)
+  const eraDivX=xScale(1997.5);
+  const eraDivLine=document.createElementNS(NS,'line');
+  eraDivLine.setAttribute('x1',eraDivX);eraDivLine.setAttribute('x2',eraDivX);
+  eraDivLine.setAttribute('y1',margin.top);eraDivLine.setAttribute('y2',margin.top+iH);
+  eraDivLine.setAttribute('stroke','#ddd8ce');eraDivLine.setAttribute('stroke-width','1');
+  eraDivLine.setAttribute('stroke-dasharray','4 3');svg.appendChild(eraDivLine);
+  const eraLbl1=document.createElementNS(NS,'text');
+  eraLbl1.setAttribute('x',eraDivX-8);eraLbl1.setAttribute('y',margin.top+iH+36);
+  eraLbl1.setAttribute('text-anchor','end');eraLbl1.setAttribute('font-size','9');
+  eraLbl1.setAttribute('fill','#8a8078');eraLbl1.setAttribute('letter-spacing','0.06em');
+  eraLbl1.textContent='← estimated';svg.appendChild(eraLbl1);
+  const eraLbl2=document.createElementNS(NS,'text');
+  eraLbl2.setAttribute('x',eraDivX+8);eraLbl2.setAttribute('y',margin.top+iH+36);
+  eraLbl2.setAttribute('text-anchor','start');eraLbl2.setAttribute('font-size','9');
+  eraLbl2.setAttribute('fill','#8a8078');eraLbl2.setAttribute('letter-spacing','0.06em');
+  eraLbl2.textContent='reported →';svg.appendChild(eraLbl2);
+
+  // Vertical year guides
+  YEARS.forEach(y=>{
+    const gx=xScale(y);
+    const vg=document.createElementNS(NS,'line');
+    vg.setAttribute('x1',gx);vg.setAttribute('x2',gx);
+    vg.setAttribute('y1',margin.top);vg.setAttribute('y2',margin.top+iH);
+    vg.setAttribute('stroke','#e8e4db');vg.setAttribute('stroke-width','1');
+    svg.appendChild(vg);
+  });
+
+  // Horizontal cap gridlines (log scale)
+  const gridCaps=[0.5,1,2,5,10,20,50,100,200,500,1000];
+  gridCaps.forEach(gc=>{
+    const gy=yScale(gc);
+    if(gy<margin.top-2||gy>margin.top+iH+2)return;
+    const gl=document.createElementNS(NS,'line');
+    gl.setAttribute('x1',margin.left);gl.setAttribute('x2',margin.left+iW);
+    gl.setAttribute('y1',gy);gl.setAttribute('y2',gy);
+    gl.setAttribute('stroke','#ddd8ce');gl.setAttribute('stroke-width','1');
+    svg.appendChild(gl);
+    const gt=document.createElementNS(NS,'text');
+    gt.setAttribute('x',margin.left-8);gt.setAttribute('y',gy+4);
+    gt.setAttribute('text-anchor','end');gt.setAttribute('font-size','10');
+    gt.setAttribute('fill','#8a8078');
+    gt.textContent=gc>=1000?'$'+(gc/1000).toFixed(0)+'T':gc>=1?'$'+gc+'B':'$'+(gc*1000).toFixed(0)+'M';
+    svg.appendChild(gt);
+  });
+
+  // X-axis ticks + labels
+  YEARS.forEach(y=>{
+    const gx=xScale(y);
+    const tk=document.createElementNS(NS,'line');
+    tk.setAttribute('x1',gx);tk.setAttribute('x2',gx);
+    tk.setAttribute('y1',margin.top+iH);tk.setAttribute('y2',margin.top+iH+5);
+    tk.setAttribute('stroke','#8a8078');tk.setAttribute('stroke-width','1');
+    svg.appendChild(tk);
+    const xl=document.createElementNS(NS,'text');
+    xl.setAttribute('x',gx);xl.setAttribute('y',margin.top+iH+18);
+    xl.setAttribute('text-anchor','middle');xl.setAttribute('font-size','10');
+    xl.setAttribute('fill','#4a4540');xl.setAttribute('letter-spacing','0.03em');
+    xl.textContent=y;svg.appendChild(xl);
+  });
+
+  // X axis line
+  const xAxisLine=document.createElementNS(NS,'line');
+  xAxisLine.setAttribute('x1',margin.left);xAxisLine.setAttribute('x2',margin.left+iW);
+  xAxisLine.setAttribute('y1',margin.top+iH);xAxisLine.setAttribute('y2',margin.top+iH);
+  xAxisLine.setAttribute('stroke','#4a4540');xAxisLine.setAttribute('stroke-width','1.5');
+  svg.appendChild(xAxisLine);
+
+  // Y axis label
+  const yAxisLbl=document.createElementNS(NS,'text');
+  yAxisLbl.setAttribute('transform','rotate(-90)');
+  yAxisLbl.setAttribute('x',-(margin.top+iH/2));
+  yAxisLbl.setAttribute('y',18);
+  yAxisLbl.setAttribute('text-anchor','middle');
+  yAxisLbl.setAttribute('font-size','9');
+  yAxisLbl.setAttribute('fill','#8a8078');
+  yAxisLbl.setAttribute('letter-spacing','0.1em');
+  yAxisLbl.textContent='MARKET CAP · 2025 USD · LOG SCALE';
+  svg.appendChild(yAxisLbl);
+
+  // Deterministic per-company x jitter so same company stays in same lane across years
+  const yearStep=iW/(YEARS.length-1);
+  const jitterRange=Math.min(yearStep*0.38,22);
+  function nameJitter(name){
+    let h=0;for(let i=0;i<name.length;i++)h=(h*31+name.charCodeAt(i))&0xfffffff;
+    return(h/0xfffffff-0.5)*2*jitterRange;
+  }
+
+  // Bubbles — draw largest first so small bubbles sit on top
+  const sorted=[...pts].sort((a,b)=>b.adj-a.adj);
+  const circleEls=[];
+  const g=document.createElementNS(NS,'g');
+  g.setAttribute('clip-path','url(#bclip)');
+
+  sorted.forEach(p=>{
+    const fk=CO_FAMILY[p.company];
+    const color=fk?(FAMILY_META[fk]?.color||STANDALONE_COLOR):STANDALONE_COLOR;
+    const cx=xScale(p.year)+nameJitter(p.company);
+    const cy=yScale(p.adj);
+    const r=rScale(p.adj);
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',r);
+    c.setAttribute('fill',color);c.setAttribute('fill-opacity','0.7');
+    c.setAttribute('stroke','rgba(255,255,255,0.65)');c.setAttribute('stroke-width','1');
+    c.style.cursor='pointer';
+    circleEls.push({el:c,p});
+    g.appendChild(c);
+  });
+  svg.appendChild(g);
+
+  // Interaction
+  function setHighlight(activeCompany){
+    circleEls.forEach(({el,p})=>{
+      const match=p.company===activeCompany;
+      el.setAttribute('fill-opacity',activeCompany===null?'0.7':match?'0.92':'0.13');
+      el.setAttribute('stroke-width',match?'2':'1');
+      el.setAttribute('stroke',match?'rgba(255,255,255,0.9)':'rgba(255,255,255,0.65)');
+    });
+  }
+
+  circleEls.forEach(({el,p})=>{
+    el.addEventListener('mouseenter',e=>{
+      setHighlight(p.company);
+      // Populate tooltip
+      document.getElementById('t-yr').textContent=p.year+(data[p.year].note?' · '+data[p.year].note:'');
+      document.getElementById('t-co').textContent=(FLAGS[p.country]||'')+' '+p.company;
+      document.getElementById('t-cap').textContent=fmtAdj(p.adj)+' (2025$)';
+      document.getElementById('t-rk').textContent='Nominal '+fmt(p.origCap)+' · Ranked #'+p.rank+' of 25';
+      document.getElementById('t-dr').textContent=p.drugs.join(' · ');
+      moveTip(e);tip.classList.add('on');
+    });
+    el.addEventListener('mousemove',moveTip);
+    el.addEventListener('mouseleave',()=>{setHighlight(null);hideTip();});
+    el.addEventListener('click',()=>openPanel(p.company));
+  });
+
+  wrap.appendChild(svg);
+
+  // Legend
+  const allFamilies=Object.keys(FAMILY_META);
+  allFamilies.forEach(fk=>{
+    const m=FAMILY_META[fk];
+    const item=document.createElement('div');item.className='bleg';
+    item.innerHTML=`<span class="bleg-swatch" style="background:${m.color}"></span>${m.label}`;
+    legendEl.appendChild(item);
+  });
+  const standaloneItem=document.createElement('div');standaloneItem.className='bleg';
+  standaloneItem.innerHTML=`<span class="bleg-swatch" style="background:${STANDALONE_COLOR}"></span>Other / Standalone`;
+  legendEl.appendChild(standaloneItem);
+}
+
+function fmt(c){if(c<=0)return'—';if(c<1)return'$'+(c*1000).toFixed(0)+'M';if(c>=100)return'$'+Math.round(c)+'B';return'$'+c.toFixed(1)+'B';}
+function fmtS(c){if(c<=0)return'—';if(c<1)return(c*1000).toFixed(0)+'M';if(c>=100)return Math.round(c)+'B';return c.toFixed(0)+'B';}
+
+function mkNav(yrs,id){
+  const el=document.getElementById(id);
+  yrs.forEach(y=>{
+    const b=document.createElement('button');
+    b.className='year-btn'+(y===active?' active':'');
+    b.textContent=y;b.onclick=()=>{active=y;renderR();};el.appendChild(b);
+  });
+}
+function renderR(){
+  document.querySelectorAll('.year-btn').forEach(b=>b.classList.toggle('active',+b.textContent===active));
+  const d=data[active];
+  document.getElementById('view-year').textContent=active;
+  const ne=document.getElementById('view-note');
+  if(d.note){ne.textContent=d.note;ne.style.display='';}else{ne.style.display='none';}
+  const validRows=d.rows.filter(r=>r.cap>0);
+  const mx=Math.max(...validRows.map(r=>r.cap));
+  const tb=document.getElementById('tbody');tb.innerHTML='';
+  d.rows.forEach((row,i)=>{
+    if(row.cap<=0)return;
+    const rk=i+1,bc=rk<=3?'rank-'+rk:'rank-other';
+    const pct=Math.round(row.cap/mx*100);
+    const pills=row.drugs.map(dr=>`<span class="drug-pill">${dr}</span>`).join('');
+    const fl=FLAGS[row.country]||'';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><span class="rank ${bc}">${rk}</span></td><td class="co-name">${row.company}</td><td class="muted hide-sm">${fl}${row.country}</td><td class="r"><span class="cap-val">${fmt(row.cap)}</span></td><td class="bar-cell hide-sm"><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></td><td><div class="drug-pills">${pills}</div></td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById('total').textContent='$'+validRows.reduce((s,r)=>s+r.cap,0).toFixed(1)+'B';
+  document.getElementById('fn').textContent=d.footnote;
+}
+
+function allCos(){
+  const map=new Map();
+  YEARS.forEach(y=>data[y].rows.forEach(r=>{
+    if(r.cap<=0)return;
+    if(!map.has(r.company))map.set(r.company,{country:r.country,total:0});
+    map.get(r.company).total+=r.cap;
+  }));
+  return Array.from(map.entries()).map(([n,m])=>({name:n,...m}));
+}
+function sortedCos(){
+  const cos=allCos();
+  if(hmSortYear===null)return cos.sort((a,b)=>b.total-a.total);
+  return cos.sort((a,b)=>{
+    const ra=data[hmSortYear].rows.find(r=>r.company===a.name&&r.cap>0);
+    const rb=data[hmSortYear].rows.find(r=>r.company===b.name&&r.cap>0);
+    return(rb?rb.cap:0)-(ra?ra.cap:0);
+  });
+}
+function capColor(cap){
+  const t=Math.min(1,Math.sqrt(cap/750));
+  const stops=[[242,236,226],[232,200,138],[201,116,58],[158,52,22],[72,14,8]];
+  const s=t*(stops.length-1),lo=Math.floor(s),hi=Math.min(stops.length-1,lo+1),f=s-lo;
+  return`rgb(${Math.round(stops[lo][0]+(stops[hi][0]-stops[lo][0])*f)},${Math.round(stops[lo][1]+(stops[hi][1]-stops[lo][1])*f)},${Math.round(stops[lo][2]+(stops[hi][2]-stops[lo][2])*f)})`;
+}
+function fgColor(cap){return Math.sqrt(cap/750)>0.42?'rgba(255,245,230,.93)':'#2a1a0a';}
+
+function buildHM(){
+  const grid=document.getElementById('hm-grid');
+  grid.innerHTML='';
+  grid.style.gridTemplateColumns=`165px repeat(${YEARS.length},1fr)`;
+
+  const corner=document.createElement('div');
+  corner.className='hm-corner-head';corner.style.cursor='pointer';
+  const isAgg=hmSortYear===null;
+  corner.innerHTML=`<div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:6px 8px 8px;color:${isAgg?'var(--accent)':'var(--ink-3)'};">${isAgg?'&#9650;&nbsp;':''}total</div>`;
+  corner.addEventListener('click',()=>{hmSortYear=null;buildHM();});
+  grid.appendChild(corner);
+
+  YEARS.forEach(y=>{
+    const h=document.createElement('div');h.className='hm-year-head';
+    const act=hmSortYear===y;
+    h.style.cssText=`cursor:pointer;user-select:none;transition:background .12s,color .12s;${act?'background:var(--ink);color:var(--bg);border-bottom-color:var(--accent);':''}`;
+    h.innerHTML=act?`${y}<br><span style="font-size:7px;">&#9660;</span>`:y;
+    h.addEventListener('click',()=>{hmSortYear=(hmSortYear===y?null:y);buildHM();});
+    h.addEventListener('mouseenter',()=>{if(!act)h.style.background='rgba(26,24,20,.07)';});
+    h.addEventListener('mouseleave',()=>{if(!act)h.style.background='';});
+    grid.appendChild(h);
+  });
+
+  sortedCos().forEach(co=>{
+    const lbl=document.createElement('div');lbl.className='hm-label';
+    lbl.innerHTML=`<span class="lbl-flag">${FLAGS[co.country]||''}</span><span class="lbl-name">${co.name}</span>`;
+    lbl.addEventListener('click',()=>openPanel(co.name));
+    grid.appendChild(lbl);
+    YEARS.forEach(y=>{
+      const row=data[y].rows.find(r=>r.company===co.name&&r.cap>0);
+      const cell=document.createElement('div');cell.className='hm-cell';
+      if(hmSortYear===y)cell.style.outline='1px solid rgba(184,74,46,.45)';
+      if(!row){
+        cell.classList.add('hm-cell-na');
+      } else {
+        const bg=capColor(row.cap),fg=fgColor(row.cap);
+        const rk=data[y].rows.filter(r=>r.cap>0).indexOf(row)+1;
+        cell.style.background=bg;
+        cell.innerHTML=`<div class="hm-inner"><span class="hm-cap" style="color:${fg}">${fmtS(row.cap)}</span><span class="hm-rnk" style="color:${fg}">#${rk}</span></div>`;
+        cell.addEventListener('mouseenter',e=>showTip(e,co.name,y,row,rk));
+        cell.addEventListener('mousemove',moveTip);
+        cell.addEventListener('mouseleave',hideTip);
+        cell.addEventListener('click',()=>openPanel(co.name));
+      }
+      grid.appendChild(cell);
+    });
+  });
+
+  const note=document.getElementById('hm-sort-note');
+  if(note)note.textContent=hmSortYear
+    ?`Sorted by ${hmSortYear} market cap — click another year to re-sort, or "total" to reset.`
+    :'Sorted by aggregate market cap across all years. Click any year header to sort by that year.';
+}
+
+const tip=document.getElementById('hm-tip');
+function showTip(e,name,year,row,rk){
+  document.getElementById('t-yr').textContent=year+(data[year].note?' · '+data[year].note:'');
+  document.getElementById('t-co').textContent=name;
+  document.getElementById('t-cap').textContent=fmt(row.cap);
+  document.getElementById('t-rk').textContent='Ranked #'+rk+' of 25 that year';
+  document.getElementById('t-dr').textContent=row.drugs.join(' · ');
+  moveTip(e);tip.classList.add('on');
+}
+function moveTip(e){
+  const tw=270,th=130;let x=e.clientX+16,y=e.clientY+16;
+  if(x+tw>window.innerWidth-8)x=e.clientX-tw-16;
+  if(y+th>window.innerHeight-8)y=e.clientY-th-16;
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
+function hideTip(){tip.classList.remove('on');}
+
+const linPanel=document.getElementById('lin-panel');
+const linOverlay=document.getElementById('lin-overlay');
+let linUid=0;
+async function openPanel(companyName){
+  hideTip();
+  const flagNameEl=document.getElementById('lin-flag-name');
+  const chartDiv=document.getElementById('lin-chart');
+  const noneDiv=document.getElementById('lin-none');
+  const hintDiv=document.getElementById('lin-hint');
+  let flag='';
+  for(const yr of YEARS){const r=data[yr].rows.find(r=>r.company===companyName);if(r){flag=(FLAGS[r.country]||'');break;}}
+  flagNameEl.textContent=(flag?flag+' ':'')+companyName;
+  const familyKey=CO_FAMILY[companyName];
+  if(!familyKey){
+    chartDiv.innerHTML='';
+    noneDiv.textContent='No merger history recorded for this company.';
+    hintDiv.textContent='';
+  } else {
+    noneDiv.textContent='';
+    hintDiv.textContent='Highlighted node = selected company. Arrows show mergers & acquisitions over time.';
+    chartDiv.innerHTML='<p style="font-size:11px;color:#999;padding:1rem 0;text-align:center;">Loading…</p>';
+    const family=LINEAGE[familyKey];
+    const nodeId=family.nodes[companyName];
+    let def=family.chart;
+    if(nodeId)def+=`\nstyle ${nodeId} fill:#b84a2e,color:#fff,stroke:#8a2a0e,stroke-width:2px`;
+    try{
+      const uid='lin-svg-'+(++linUid);
+      const {svg}=await mermaid.render(uid,def);
+      chartDiv.innerHTML=svg;
+    } catch(e){
+      chartDiv.innerHTML='<p style="color:#c00;font-size:12px;padding:.5rem;">Chart render error.</p>';
+    }
+  }
+  linOverlay.style.display='block';
+  linPanel.classList.add('open');
+}
+function closePanel(){linPanel.classList.remove('open');linOverlay.style.display='none';}
+document.getElementById('lin-close').addEventListener('click',closePanel);
+linOverlay.addEventListener('click',closePanel);
+
+function squarifyLayout(items,x0,y0,x1,y1){
+  const result=[];
+  if(!items||!items.length)return result;
+  const sorted=[...items].sort((a,b)=>b.value-a.value);
+  const W=x1-x0,H=y1-y0;
+  if(W<=0||H<=0)return result;
+  function tile(nodes,x,y,w,h){
+    if(!nodes.length)return;
+    if(nodes.length===1){result.push({...nodes[0],x,y,w,h});return;}
+    const total=nodes.reduce((s,d)=>s+d.value,0);
+    if(total<=0)return;
+    const horiz=w>=h;
+    const shortSide=horiz?h:w;
+    let bestSplit=1,bestScore=Infinity,trySum=0;
+    for(let i=0;i<nodes.length;i++){
+      trySum+=nodes[i].value;
+      const rowLen=(trySum/total)*(horiz?w:h);
+      let worst=0;
+      for(let j=0;j<=i;j++){
+        const cell=(nodes[j].value/trySum)*shortSide;
+        worst=Math.max(worst,Math.max(rowLen/cell,cell/rowLen));
+      }
+      if(worst<bestScore){bestScore=worst;bestSplit=i+1;}
+      else break;
+    }
+    const row=nodes.slice(0,bestSplit);
+    const rowSum=row.reduce((s,d)=>s+d.value,0);
+    const rowLen=(rowSum/total)*(horiz?w:h);
+    let pos=horiz?y:x;
+    row.forEach(d=>{
+      const cellLen=(d.value/rowSum)*shortSide;
+      result.push({...d,x:horiz?x:pos,y:horiz?pos:y,w:horiz?rowLen:cellLen,h:horiz?cellLen:rowLen});
+      pos+=cellLen;
+    });
+    if(bestSplit<nodes.length){
+      horiz?tile(nodes.slice(bestSplit),x+rowLen,y,w-rowLen,h):tile(nodes.slice(bestSplit),x,y+rowLen,w,h-rowLen);
+    }
+  }
+  tile(sorted,x0,y0,W,H);
+  return result;
+}
+
+let treemapBuilt=false;
+function buildTreemap(){
+  if(treemapBuilt)return;treemapBuilt=true;
+  const wrap=document.getElementById('treemap-wrap');
+  const NS='http://www.w3.org/2000/svg';
+
+  // Aggregate: company → {value, country, years[], drugs[]}
+  const aggMap=new Map();
+  YEARS.forEach(y=>{
+    data[y].rows.forEach(r=>{
+      if(r.cap<=0)return;
+      const adj=r.cap*CPI_MULT[y];
+      if(!aggMap.has(r.company))aggMap.set(r.company,{company:r.company,country:r.country,value:0,years:[],drugs:r.drugs});
+      const e=aggMap.get(r.company);
+      e.value+=adj;e.years.push(y);e.drugs=r.drugs;
+    });
+  });
+
+  // Group by family
+  const familyMap=new Map();
+  [...Object.keys(FAMILY_META),'__standalone'].forEach(fk=>{
+    const meta=FAMILY_META[fk]||{label:'Other',color:STANDALONE_COLOR};
+    familyMap.set(fk,{fk,label:meta.label,color:meta.color,companies:[],value:0});
+  });
+  aggMap.forEach(co=>{
+    const fk=CO_FAMILY[co.company]||'__standalone';
+    const grp=familyMap.get(fk)||familyMap.get('__standalone');
+    grp.companies.push(co);grp.value+=co.value;
+  });
+
+  const totalW=Math.max(wrap.clientWidth||960,720);
+  const H=640;
+  const FGAP=3;   // gap between family zones
+  const FLABEL=16; // height reserved for family label
+  const CGAP=2;   // gap between company cells
+
+  // Family-level squarify
+  const families=Array.from(familyMap.values()).filter(f=>f.companies.length>0).sort((a,b)=>b.value-a.value);
+  const familyRects=squarifyLayout(families,0,0,totalW,H);
+
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('width',totalW);svg.setAttribute('height',H);
+
+  const bgR=document.createElementNS(NS,'rect');
+  bgR.setAttribute('width',totalW);bgR.setAttribute('height',H);bgR.setAttribute('fill','#ece8df');
+  svg.appendChild(bgR);
+
+  const allCells=[];
+
+  familyRects.forEach(fr=>{
+    const {x,y,w,h,fk,label,color,companies}=fr;
+    const fx=x+FGAP,fy=y+FGAP,fw=w-2*FGAP,fh=h-2*FGAP;
+    if(fw<4||fh<4)return;
+
+    // Family background
+    const fbg=document.createElementNS(NS,'rect');
+    fbg.setAttribute('x',fx);fbg.setAttribute('y',fy);
+    fbg.setAttribute('width',fw);fbg.setAttribute('height',fh);
+    fbg.setAttribute('fill',color);fbg.setAttribute('fill-opacity','0.13');
+    fbg.setAttribute('rx','3');svg.appendChild(fbg);
+
+    // Company cells zone
+    const cX=fx+CGAP,cY=fy+FLABEL,cW=fw-2*CGAP,cH=fh-FLABEL-CGAP;
+    if(cW<4||cH<4)return;
+
+    const coRects=squarifyLayout(companies,cX,cY,cX+cW,cY+cH);
+
+    coRects.forEach(cr=>{
+      const {x:cx,y:cy,w:cw,h:ch,company,country,value,years,drugs}=cr;
+      const cellX=cx+CGAP/2,cellY=cy+CGAP/2;
+      const cellW=cw-CGAP,cellH=ch-CGAP;
+      if(cellW<3||cellH<3)return;
+
+      const rx=Math.min(3,cellW/4,cellH/4);
+      const cell=document.createElementNS(NS,'rect');
+      cell.setAttribute('x',cellX);cell.setAttribute('y',cellY);
+      cell.setAttribute('width',cellW);cell.setAttribute('height',cellH);
+      cell.setAttribute('fill',color);cell.setAttribute('fill-opacity','0.82');
+      cell.setAttribute('rx',rx);cell.style.cursor='pointer';
+      svg.appendChild(cell);
+      allCells.push({el:cell,company});
+
+      // Label: name + value if space
+      if(cellW>46&&cellH>18){
+        const hasVal=cellH>38;
+        const fs=Math.min(11,Math.max(8,cellW/9));
+        const maxC=Math.floor(cellW/(fs*0.58));
+        const lbl=document.createElementNS(NS,'text');
+        lbl.setAttribute('x',cellX+cellW/2);
+        lbl.setAttribute('y',cellY+cellH/2+(hasVal?-6:4));
+        lbl.setAttribute('text-anchor','middle');lbl.setAttribute('dominant-baseline','middle');
+        lbl.setAttribute('font-size',fs);lbl.setAttribute('font-family',"'Instrument Sans',sans-serif");
+        lbl.setAttribute('font-weight','500');lbl.setAttribute('fill','#fff');
+        lbl.setAttribute('fill-opacity','0.95');lbl.setAttribute('pointer-events','none');
+        lbl.textContent=company.length>maxC?company.slice(0,maxC-1)+'…':company;
+        svg.appendChild(lbl);
+        if(hasVal){
+          const vt=document.createElementNS(NS,'text');
+          vt.setAttribute('x',cellX+cellW/2);vt.setAttribute('y',cellY+cellH/2+9);
+          vt.setAttribute('text-anchor','middle');vt.setAttribute('font-size','9');
+          vt.setAttribute('font-family',"'DM Mono',monospace");
+          vt.setAttribute('fill','#fff');vt.setAttribute('fill-opacity','0.68');
+          vt.setAttribute('pointer-events','none');vt.textContent=fmtAdj(value);
+          svg.appendChild(vt);
+        }
+      } else if(cellW>20&&cellH>14){
+        const flag=FLAGS[country]||'';
+        if(flag){
+          const ft=document.createElementNS(NS,'text');
+          ft.setAttribute('x',cellX+cellW/2);ft.setAttribute('y',cellY+cellH/2+4);
+          ft.setAttribute('text-anchor','middle');ft.setAttribute('font-size','11');
+          ft.setAttribute('pointer-events','none');ft.textContent=flag;
+          svg.appendChild(ft);
+        }
+      }
+
+      // Hover
+      cell.addEventListener('mouseenter',e=>{
+        allCells.forEach(({el,company:c})=>el.setAttribute('fill-opacity',c===company?'0.96':'0.18'));
+        document.getElementById('t-yr').textContent=years[0]+(years.length>1?'–'+years[years.length-1]:'')+' · '+years.length+' snapshot'+(years.length>1?'s':'');
+        document.getElementById('t-co').textContent=(FLAGS[country]||'')+' '+company;
+        document.getElementById('t-cap').textContent=fmtAdj(value)+' cumulative (2025$)';
+        document.getElementById('t-rk').textContent='In top 25 for '+years.length+' of 16 snapshots';
+        document.getElementById('t-dr').textContent=drugs.join(' · ');
+        moveTip(e);tip.classList.add('on');
+      });
+      cell.addEventListener('mousemove',moveTip);
+      cell.addEventListener('mouseleave',()=>{allCells.forEach(({el})=>el.setAttribute('fill-opacity','0.82'));hideTip();});
+    });
+
+    // Family label
+    if(fw>32&&fh>FLABEL){
+      const fl=document.createElementNS(NS,'text');
+      fl.setAttribute('x',fx+5);fl.setAttribute('y',fy+12);
+      fl.setAttribute('font-size','9');fl.setAttribute('letter-spacing','0.08em');
+      fl.setAttribute('fill',color);fl.setAttribute('fill-opacity','0.9');
+      fl.setAttribute('font-family',"'DM Mono',monospace");
+      fl.setAttribute('pointer-events','none');
+      const maxC=Math.floor((fw-10)/5.5);
+      const txt=label.toUpperCase();
+      fl.textContent=txt.length>maxC?txt.slice(0,maxC-1)+'…':txt;
+      svg.appendChild(fl);
+    }
+  });
+
+  wrap.appendChild(svg);
+}
+
+let treemapYearBuilt=false;
+function buildTreemapYear(){
+  if(treemapYearBuilt)return;treemapYearBuilt=true;
+  const wrap=document.getElementById('treemap-year-wrap');
+  const NS='http://www.w3.org/2000/svg';
+
+  // One entry per company-year snapshot
+  const pts=[];
+  YEARS.forEach(y=>{
+    data[y].rows.forEach((r,i)=>{
+      if(r.cap<=0)return;
+      pts.push({value:r.cap*CPI_MULT[y],company:r.company,country:r.country,year:y,rank:i+1,origCap:r.cap,drugs:r.drugs});
+    });
+  });
+
+  const totalW=Math.max(wrap.clientWidth||960,720);
+  const H=640;
+  const GAP=1.5;
+
+  const cells=squarifyLayout(pts,0,0,totalW,H);
+
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('width',totalW);svg.setAttribute('height',H);
+
+  const bgR=document.createElementNS(NS,'rect');
+  bgR.setAttribute('width',totalW);bgR.setAttribute('height',H);bgR.setAttribute('fill','#ece8df');
+  svg.appendChild(bgR);
+
+  const allCells=[];
+
+  cells.forEach(cell=>{
+    const {x,y,w,h,value,company,country,year,rank,origCap,drugs}=cell;
+    const fk=CO_FAMILY[company];
+    const color=fk?(FAMILY_META[fk]?.color||STANDALONE_COLOR):STANDALONE_COLOR;
+    const cellX=x+GAP/2,cellY=y+GAP/2,cellW=w-GAP,cellH=h-GAP;
+    if(cellW<2||cellH<2)return;
+
+    const rx=Math.min(2,cellW/4,cellH/4);
+    const rect=document.createElementNS(NS,'rect');
+    rect.setAttribute('x',cellX);rect.setAttribute('y',cellY);
+    rect.setAttribute('width',cellW);rect.setAttribute('height',cellH);
+    rect.setAttribute('fill',color);rect.setAttribute('fill-opacity','0.82');
+    rect.setAttribute('rx',rx);rect.style.cursor='pointer';
+    svg.appendChild(rect);
+    allCells.push({el:rect,company});
+
+    if(cellW>50&&cellH>22){
+      const hasExtra=cellH>38;
+      const fs=Math.min(11,Math.max(8,cellW/9));
+      const maxC=Math.floor(cellW/(fs*0.58));
+      const lbl=document.createElementNS(NS,'text');
+      lbl.setAttribute('x',cellX+cellW/2);lbl.setAttribute('y',cellY+cellH/2+(hasExtra?-7:4));
+      lbl.setAttribute('text-anchor','middle');lbl.setAttribute('font-size',fs);
+      lbl.setAttribute('font-family',"'Instrument Sans',sans-serif");lbl.setAttribute('font-weight','500');
+      lbl.setAttribute('fill','#fff');lbl.setAttribute('fill-opacity','0.95');lbl.setAttribute('pointer-events','none');
+      lbl.textContent=company.length>maxC?company.slice(0,maxC-1)+'…':company;
+      svg.appendChild(lbl);
+      if(hasExtra){
+        const yt=document.createElementNS(NS,'text');
+        yt.setAttribute('x',cellX+cellW/2);yt.setAttribute('y',cellY+cellH/2+7);
+        yt.setAttribute('text-anchor','middle');yt.setAttribute('font-size','9');
+        yt.setAttribute('font-family',"'DM Mono',monospace");
+        yt.setAttribute('fill','#fff');yt.setAttribute('fill-opacity','0.72');yt.setAttribute('pointer-events','none');
+        yt.textContent=year+' · '+fmtAdj(value);
+        svg.appendChild(yt);
+      }
+    } else if(cellW>22&&cellH>14){
+      const yt=document.createElementNS(NS,'text');
+      yt.setAttribute('x',cellX+cellW/2);yt.setAttribute('y',cellY+cellH/2+4);
+      yt.setAttribute('text-anchor','middle');yt.setAttribute('font-size','9');
+      yt.setAttribute('font-family',"'DM Mono',monospace");
+      yt.setAttribute('fill','#fff');yt.setAttribute('fill-opacity','0.85');yt.setAttribute('pointer-events','none');
+      yt.textContent=year;
+      svg.appendChild(yt);
+    }
+
+    rect.addEventListener('mouseenter',e=>{
+      allCells.forEach(({el,company:c})=>el.setAttribute('fill-opacity',c===company?'0.96':'0.18'));
+      document.getElementById('t-yr').textContent=year+(data[year].note?' · '+data[year].note:'');
+      document.getElementById('t-co').textContent=(FLAGS[country]||'')+' '+company;
+      document.getElementById('t-cap').textContent=fmtAdj(value)+' (2025$)';
+      document.getElementById('t-rk').textContent='Nominal '+fmt(origCap)+' · Ranked #'+rank+' of 25';
+      document.getElementById('t-dr').textContent=drugs.join(' · ');
+      moveTip(e);tip.classList.add('on');
+    });
+    rect.addEventListener('mousemove',moveTip);
+    rect.addEventListener('mouseleave',()=>{allCells.forEach(({el})=>el.setAttribute('fill-opacity','0.82'));hideTip();});
+    rect.addEventListener('click',()=>openPanel(company));
+  });
+
+  wrap.appendChild(svg);
+}
+
+document.querySelectorAll('.tab-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+    if(b.dataset.tab==='bubble')buildBubble();
+    if(b.dataset.tab==='treemap-year')buildTreemapYear();
+    if(b.dataset.tab==='treemap-agg')buildTreemap();
+  });
+});
+
+mkNav(EARLY,'nav-early');mkNav(MODERN,'nav-modern');renderR();buildHM();
+</script>
+</body>
+</html>
