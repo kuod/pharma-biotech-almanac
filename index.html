@@ -130,6 +130,38 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
 #bubble-legend{display:flex;flex-wrap:wrap;gap:8px 16px;padding-top:1.25rem;border-top:1px solid var(--rule);margin-bottom:1.5rem;}
 .bleg{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.04em;color:var(--ink-2);cursor:default;}
 .bleg-swatch{width:11px;height:11px;border-radius:50%;flex-shrink:0;opacity:.85;}
+/* Search bar */
+#search-bar{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:8px 3rem;display:flex;align-items:center;gap:10px;}
+#search-input{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.04em;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:2px;color:var(--bg);padding:5px 11px;width:240px;outline:none;transition:border-color .15s;}
+#search-input::placeholder{color:rgba(245,242,235,.3);}
+#search-input:focus{border-color:rgba(255,255,255,.3);}
+#search-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,242,235,.3);}
+#search-clear{font-family:'DM Mono',monospace;font-size:10px;background:transparent;border:none;color:rgba(245,242,235,.35);cursor:pointer;padding:4px 6px;border-radius:2px;display:none;transition:color .12s;}
+#search-clear:hover{color:var(--bg);}
+#search-count{font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,242,235,.35);margin-left:4px;}
+@media(max-width:640px){#search-bar{padding:8px 1.25rem;}#search-input{width:100%;}}
+/* Delta column */
+.delta{font-family:'DM Mono',monospace;font-size:11px;white-space:nowrap;text-align:center;min-width:36px;}
+.delta-up{color:#3a8a3a;}
+.delta-down{color:#b84a2e;}
+.delta-new{color:var(--gold);font-size:10px;letter-spacing:.04em;}
+.delta-flat{color:var(--ink-3);}
+/* Movers panel */
+#movers-panel{display:flex;gap:2rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--rule);flex-wrap:wrap;}
+.movers-col{flex:1;min-width:180px;}
+.movers-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.5rem;}
+.movers-list{display:flex;flex-direction:column;gap:5px;}
+.mover-item{display:flex;align-items:baseline;gap:8px;font-size:12px;}
+.mover-name{font-weight:500;color:var(--ink);}
+.mover-detail{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-3);}
+.mover-gain{color:#3a8a3a;font-family:'DM Mono',monospace;font-size:11px;}
+.mover-loss{color:#b84a2e;font-family:'DM Mono',monospace;font-size:11px;}
+/* Country chart */
+#country-chart-wrap{width:100%;overflow-x:auto;margin-bottom:1.5rem;}
+#country-chart-wrap svg{display:block;}
+.ctry-legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:1.5rem;}
+.ctry-leg-item{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.04em;color:var(--ink-2);}
+.ctry-leg-swatch{width:11px;height:11px;border-radius:1px;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -143,9 +175,17 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="rankings">Rankings</button>
   <button class="tab-btn" data-tab="heatmap">Heatmap</button>
+  <button class="tab-btn" data-tab="countries">Countries</button>
   <button class="tab-btn" data-tab="bubble">Bubble</button>
   <button class="tab-btn" data-tab="treemap-year">Treemap-Year</button>
   <button class="tab-btn" data-tab="treemap-agg">Treemap-Aggregate</button>
+</div>
+
+<div id="search-bar">
+  <span id="search-label">Search</span>
+  <input id="search-input" type="text" placeholder="company or drug…" autocomplete="off" spellcheck="false">
+  <button id="search-clear">✕ clear</button>
+  <span id="search-count"></span>
 </div>
 
 <div class="tab-panel active" id="tab-rankings">
@@ -163,7 +203,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th style="width:40px;">#</th><th>Company</th>
+          <th style="width:40px;">#</th><th style="width:36px;text-align:center;" class="hide-sm">Δ</th><th>Company</th>
           <th class="hide-sm">Ctry</th><th class="r">Mkt Cap</th>
           <th class="bar-cell hide-sm"></th><th>Key Products</th>
         </tr></thead>
@@ -171,6 +211,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
       </table>
     </div>
     <div class="footer-row"><div class="footer-total">Top 25 combined: <span id="total"></span></div></div>
+    <div id="movers-panel"></div>
     <div class="fn" id="fn"></div>
     <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-1990 figures are estimates</div>
   </div>
@@ -197,6 +238,18 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
       <div class="legend-note">Scale uses √ transform so mid-tier companies stay visible. Pre-1990 = estimates. Gray = not in top 25 that year.</div>
     </div>
     <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-countries">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Country Dominance, 1950–2025</div>
+      <div class="hm-desc">Share of top-25 nominal market cap by home country across all 16 snapshots. Hover a segment for exact figures.</div>
+    </div>
+    <div id="country-chart-wrap"></div>
+    <div class="ctry-legend" id="ctry-legend"></div>
+    <div class="credit">Nominal figures · Home country = country of incorporation at time of snapshot · Pre-1990 figures are estimates</div>
   </div>
 </div>
 
@@ -1105,6 +1158,12 @@ function renderR(){
   if(d.note){ne.textContent=d.note;ne.style.display='';}else{ne.style.display='none';}
   const validRows=d.rows.filter(r=>r.cap>0);
   const mx=Math.max(...validRows.map(r=>r.cap));
+
+  // Previous year for Δ
+  const prevYearIdx=YEARS.indexOf(active)-1;
+  const prevYear=prevYearIdx>=0?YEARS[prevYearIdx]:null;
+  const prevRows=prevYear?data[prevYear].rows.filter(r=>r.cap>0):[];
+
   const tb=document.getElementById('tbody');tb.innerHTML='';
   d.rows.forEach((row,i)=>{
     if(row.cap<=0)return;
@@ -1112,12 +1171,59 @@ function renderR(){
     const pct=Math.round(row.cap/mx*100);
     const pills=row.drugs.map(dr=>`<span class="drug-pill">${dr}</span>`).join('');
     const fl=FLAGS[row.country]||'';
+
+    // Compute delta
+    let deltaHtml='<td class="delta hide-sm">—</td>';
+    if(prevYear){
+      const prevIdx=prevRows.findIndex(r=>r.company===row.company);
+      if(prevIdx===-1){
+        deltaHtml='<td class="delta delta-new hide-sm">new</td>';
+      } else {
+        const diff=(prevIdx+1)-rk; // positive = moved up
+        if(diff>0) deltaHtml=`<td class="delta delta-up hide-sm">▲${diff}</td>`;
+        else if(diff<0) deltaHtml=`<td class="delta delta-down hide-sm">▼${Math.abs(diff)}</td>`;
+        else deltaHtml='<td class="delta delta-flat hide-sm">—</td>';
+      }
+    }
+
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span class="rank ${bc}">${rk}</span></td><td class="co-name">${row.company}</td><td class="muted hide-sm">${fl}${row.country}</td><td class="r"><span class="cap-val">${fmt(row.cap)}</span></td><td class="bar-cell hide-sm"><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></td><td><div class="drug-pills">${pills}</div></td>`;
+    tr.innerHTML=`<td><span class="rank ${bc}">${rk}</span></td>${deltaHtml}<td class="co-name">${row.company}</td><td class="muted hide-sm">${fl}${row.country}</td><td class="r"><span class="cap-val">${fmt(row.cap)}</span></td><td class="bar-cell hide-sm"><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></td><td><div class="drug-pills">${pills}</div></td>`;
     tb.appendChild(tr);
   });
   document.getElementById('total').textContent='$'+validRows.reduce((s,r)=>s+r.cap,0).toFixed(1)+'B';
   document.getElementById('fn').textContent=d.footnote;
+
+  // Movers panel
+  const mp=document.getElementById('movers-panel');
+  if(!prevYear){mp.innerHTML='';return;}
+  const curNames=new Set(validRows.map(r=>r.company));
+  const prevNames=new Set(prevRows.map(r=>r.company));
+  const newEntrants=validRows.filter(r=>!prevNames.has(r.company));
+  const dropped=prevRows.filter(r=>!curNames.has(r.company));
+  const gainers=validRows
+    .map(r=>{const pi=prevRows.findIndex(p=>p.company===r.company);return pi===-1?null:{company:r.company,gain:(pi+1)-(validRows.indexOf(r)+1)};})
+    .filter(x=>x&&x.gain>0).sort((a,b)=>b.gain-a.gain).slice(0,3);
+
+  let html='<div id="movers-panel" style="display:flex;gap:2rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--rule);flex-wrap:wrap;">';
+
+  if(newEntrants.length){
+    html+=`<div class="movers-col"><div class="movers-lbl">New entries (${prevYear}→${active})</div><div class="movers-list">`;
+    newEntrants.forEach(r=>{html+=`<div class="mover-item"><span class="mover-name">${r.company}</span><span class="mover-detail">${FLAGS[r.country]||''} ${fmt(r.cap)}</span></div>`;});
+    html+='</div></div>';
+  }
+  if(dropped.length){
+    html+=`<div class="movers-col"><div class="movers-lbl">Dropped out</div><div class="movers-list">`;
+    dropped.forEach(r=>{html+=`<div class="mover-item"><span class="mover-name">${r.company}</span><span class="mover-detail mover-loss">was #${prevRows.indexOf(r)+1}</span></div>`;});
+    html+='</div></div>';
+  }
+  if(gainers.length){
+    html+=`<div class="movers-col"><div class="movers-lbl">Biggest climbers</div><div class="movers-list">`;
+    gainers.forEach(g=>{html+=`<div class="mover-item"><span class="mover-name">${g.company}</span><span class="mover-gain">▲${g.gain}</span></div>`;});
+    html+='</div></div>';
+  }
+  html+='</div>';
+  mp.outerHTML=html;
+  applySearch();
 }
 
 function allCos(){
@@ -1549,8 +1655,167 @@ document.querySelectorAll('.tab-btn').forEach(b=>{
     if(b.dataset.tab==='bubble')buildBubble();
     if(b.dataset.tab==='treemap-year')buildTreemapYear();
     if(b.dataset.tab==='treemap-agg')buildTreemap();
+    if(b.dataset.tab==='countries')buildCountries();
+    applySearch();
   });
 });
+
+// ── Keyboard navigation (Rankings tab) ──────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(document.activeElement===document.getElementById('search-input'))return;
+  const rankingsActive=document.getElementById('tab-rankings').classList.contains('active');
+  if(!rankingsActive)return;
+  const idx=YEARS.indexOf(active);
+  if(e.key==='ArrowLeft'&&idx>0){active=YEARS[idx-1];renderR();}
+  else if(e.key==='ArrowRight'&&idx<YEARS.length-1){active=YEARS[idx+1];renderR();}
+});
+
+// ── Search ───────────────────────────────────────────────────────────────────
+let searchQ='';
+function applySearch(){
+  const q=searchQ.toLowerCase().trim();
+  const clearBtn=document.getElementById('search-clear');
+  const countEl=document.getElementById('search-count');
+  clearBtn.style.display=q?'':'none';
+
+  // Rankings: show/dim rows
+  const rankTab=document.getElementById('tab-rankings');
+  if(rankTab.classList.contains('active')){
+    const rows=document.querySelectorAll('#tbody tr');
+    let shown=0;
+    rows.forEach(tr=>{
+      if(!q){tr.style.opacity='';tr.style.display='';shown++;return;}
+      const text=tr.textContent.toLowerCase();
+      const match=text.includes(q);
+      tr.style.opacity=match?'1':'0.18';
+      tr.style.display='';
+      if(match)shown++;
+    });
+    countEl.textContent=q?(shown+' match'+(shown!==1?'es':'')):'';
+  }
+
+  // Heatmap: highlight matching label rows
+  const hmTab=document.getElementById('tab-heatmap');
+  if(hmTab.classList.contains('active')){
+    document.querySelectorAll('.hm-label').forEach(lbl=>{
+      const name=lbl.querySelector('.lbl-name');
+      if(!name)return;
+      const match=!q||name.textContent.toLowerCase().includes(q);
+      lbl.style.opacity=match?'1':'0.2';
+      // Find all cells in same grid row by iterating sibling cells
+      let el=lbl.nextElementSibling;
+      while(el&&el.classList.contains('hm-cell')){
+        el.style.opacity=match?'1':'0.12';
+        el=el.nextElementSibling;
+      }
+    });
+    countEl.textContent='';
+  }
+}
+
+const searchInput=document.getElementById('search-input');
+searchInput.addEventListener('input',()=>{searchQ=searchInput.value;applySearch();});
+document.getElementById('search-clear').addEventListener('click',()=>{searchInput.value='';searchQ='';applySearch();searchInput.focus();});
+
+// ── Country dominance chart ──────────────────────────────────────────────────
+const CTRY_GROUPS=['US','CH','GB','DE','JP','DK','Other'];
+const CTRY_COLORS={US:'#2d6fc4',CH:'#c42d2d',GB:'#1a3a6b',DE:'#c49a2d',JP:'#c4552d',DK:'#9b59b6',Other:'#a39b90'};
+
+let countriesBuilt=false;
+function buildCountries(){
+  if(countriesBuilt)return;countriesBuilt=true;
+  const wrap=document.getElementById('country-chart-wrap');
+  const NS='http://www.w3.org/2000/svg';
+
+  // Aggregate cap per country group per year
+  const grouped=YEARS.map(y=>{
+    const totals={};
+    CTRY_GROUPS.forEach(g=>{totals[g]=0;});
+    data[y].rows.forEach(r=>{
+      if(r.cap<=0)return;
+      const g=CTRY_GROUPS.includes(r.country)?r.country:'Other';
+      totals[g]+=r.cap;
+    });
+    const total=Object.values(totals).reduce((s,v)=>s+v,0);
+    return{year:y,totals,total};
+  });
+
+  const margin={top:24,right:28,bottom:44,left:52};
+  const totalW=Math.max(wrap.clientWidth||900,640);
+  const H=420;
+  const iW=totalW-margin.left-margin.right;
+  const iH=H-margin.top-margin.bottom;
+
+  const barW=Math.floor(iW/YEARS.length*0.62);
+  const barGap=(iW-barW*YEARS.length)/(YEARS.length+1);
+
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('width',totalW);svg.setAttribute('height',H);
+  svg.style.cssText="display:block;font-family:'DM Mono',monospace;";
+
+  const bg=document.createElementNS(NS,'rect');
+  bg.setAttribute('width',totalW);bg.setAttribute('height',H);bg.setAttribute('fill','#faf8f3');svg.appendChild(bg);
+
+  // Y gridlines (0, 25, 50, 75, 100%)
+  [0,25,50,75,100].forEach(pct=>{
+    const gy=margin.top+(1-pct/100)*iH;
+    const gl=document.createElementNS(NS,'line');
+    gl.setAttribute('x1',margin.left);gl.setAttribute('x2',margin.left+iW);
+    gl.setAttribute('y1',gy);gl.setAttribute('y2',gy);
+    gl.setAttribute('stroke',pct===0||pct===100?'#c0bab0':'#e8e4db');gl.setAttribute('stroke-width','1');
+    svg.appendChild(gl);
+    const gt=document.createElementNS(NS,'text');
+    gt.setAttribute('x',margin.left-6);gt.setAttribute('y',gy+4);
+    gt.setAttribute('text-anchor','end');gt.setAttribute('font-size','10');gt.setAttribute('fill','#8a8078');
+    gt.textContent=pct+'%';svg.appendChild(gt);
+  });
+
+  const tip2=document.getElementById('hm-tip');
+
+  grouped.forEach((yd,xi)=>{
+    const bx=margin.left+barGap+(barW+barGap)*xi;
+    let stackY=margin.top+iH;
+    CTRY_GROUPS.forEach(g=>{
+      const val=yd.totals[g];
+      if(!val)return;
+      const pct=val/yd.total;
+      const bh=pct*iH;
+      const by=stackY-bh;
+      stackY=by;
+      const rect=document.createElementNS(NS,'rect');
+      rect.setAttribute('x',bx);rect.setAttribute('y',by);
+      rect.setAttribute('width',barW);rect.setAttribute('height',bh);
+      rect.setAttribute('fill',CTRY_COLORS[g]);rect.setAttribute('fill-opacity','0.85');
+      rect.style.cursor='default';
+      rect.addEventListener('mouseenter',e=>{
+        document.getElementById('t-yr').textContent=yd.year+(data[yd.year].note?' · '+data[yd.year].note:'');
+        document.getElementById('t-co').textContent=g==='Other'?'Other countries':g;
+        document.getElementById('t-cap').textContent=fmt(val)+' ('+Math.round(pct*100)+'% of top 25)';
+        document.getElementById('t-rk').textContent='Total top-25 cap: '+fmt(yd.total);
+        document.getElementById('t-dr').textContent='';
+        moveTip(e);tip2.classList.add('on');
+      });
+      rect.addEventListener('mousemove',moveTip);
+      rect.addEventListener('mouseleave',hideTip);
+      svg.appendChild(rect);
+    });
+    // X label
+    const xl=document.createElementNS(NS,'text');
+    xl.setAttribute('x',bx+barW/2);xl.setAttribute('y',margin.top+iH+16);
+    xl.setAttribute('text-anchor','middle');xl.setAttribute('font-size','10');xl.setAttribute('fill','#4a4540');
+    xl.textContent=yd.year;svg.appendChild(xl);
+  });
+
+  wrap.appendChild(svg);
+
+  // Legend
+  const leg=document.getElementById('ctry-legend');
+  CTRY_GROUPS.forEach(g=>{
+    const item=document.createElement('div');item.className='ctry-leg-item';
+    item.innerHTML=`<span class="ctry-leg-swatch" style="background:${CTRY_COLORS[g]};opacity:.85;"></span>${g==='Other'?'Other':g}`;
+    leg.appendChild(item);
+  });
+}
 
 mkNav(EARLY,'nav-early');mkNav(MODERN,'nav-modern');renderR();buildHM();
 </script>
