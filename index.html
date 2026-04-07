@@ -174,6 +174,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
 
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="rankings">Rankings</button>
+  <button class="tab-btn" data-tab="bump">Bump Chart</button>
   <button class="tab-btn" data-tab="heatmap">Heatmap</button>
   <button class="tab-btn" data-tab="countries">Countries</button>
   <button class="tab-btn" data-tab="bubble">Bubble</button>
@@ -215,6 +216,17 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     <div id="movers-panel"></div>
     <div class="fn" id="fn"></div>
     <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-bump">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Ranking Trajectories, 1950–2025</div>
+      <div class="hm-desc">Each line = one company. Y-axis = rank within the top 25 (1 = largest). Lines are discontinuous when a company exits and re-enters the ranking. Hover to highlight a company.</div>
+    </div>
+    <div id="bump-wrap"></div>
+    <div class="credit">Pre-1990 figures are estimates · Rank based on nominal market cap within each snapshot</div>
   </div>
 </div>
 
@@ -1694,6 +1706,205 @@ function closePanel(){linPanel.classList.remove('open');linOverlay.style.display
 document.getElementById('lin-close').addEventListener('click',closePanel);
 linOverlay.addEventListener('click',closePanel);
 
+let bumpBuilt=false;
+function buildBump(){
+  if(bumpBuilt)return;bumpBuilt=true;
+  const wrap=document.getElementById('bump-wrap');
+  const NS='http://www.w3.org/2000/svg';
+
+  // Collect all companies and their rank per year
+  const coMap=new Map(); // name → {country, ranks:{year→rank}, family}
+  YEARS.forEach(y=>{
+    data[y].rows.forEach((r,i)=>{
+      if(r.cap<=0)return;
+      if(!coMap.has(r.company))coMap.set(r.company,{country:r.country,ranks:{}});
+      coMap.get(r.company).ranks[y]=i+1;
+    });
+  });
+  const companies=[...coMap.entries()].map(([name,d])=>({name,...d}));
+
+  const margin={top:16,right:115,bottom:36,left:115};
+  const totalW=Math.max(wrap.clientWidth||960,720);
+  const H=600;
+  const iW=totalW-margin.left-margin.right;
+  const iH=H-margin.top-margin.bottom;
+  const RANKS=25;
+
+  const xScale=i=>margin.left+i*(iW/(YEARS.length-1));
+  const yScale=r=>margin.top+((r-1)/(RANKS-1))*iH;
+
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('width',totalW);svg.setAttribute('height',H);
+  svg.style.cssText="display:block;font-family:'DM Mono',monospace;";
+
+  // Background
+  const bg=document.createElementNS(NS,'rect');
+  bg.setAttribute('width',totalW);bg.setAttribute('height',H);bg.setAttribute('fill','#faf8f3');
+  svg.appendChild(bg);
+
+  // Horizontal rank gridlines
+  [1,5,10,15,20,25].forEach(r=>{
+    const y=yScale(r);
+    const line=document.createElementNS(NS,'line');
+    line.setAttribute('x1',margin.left);line.setAttribute('x2',margin.left+iW);
+    line.setAttribute('y1',y);line.setAttribute('y2',y);
+    line.setAttribute('stroke','#ddd8ce');line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+    const lbl=document.createElementNS(NS,'text');
+    lbl.setAttribute('x',margin.left-6);lbl.setAttribute('y',y+4);
+    lbl.setAttribute('text-anchor','end');lbl.setAttribute('font-size','10');
+    lbl.setAttribute('fill','#8a8078');lbl.textContent=r;
+    svg.appendChild(lbl);
+  });
+
+  // Year axis labels
+  YEARS.forEach((y,i)=>{
+    const x=xScale(i);
+    const line=document.createElementNS(NS,'line');
+    line.setAttribute('x1',x);line.setAttribute('x2',x);
+    line.setAttribute('y1',margin.top);line.setAttribute('y2',margin.top+iH);
+    line.setAttribute('stroke','#ddd8ce');line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+    const lbl=document.createElementNS(NS,'text');
+    lbl.setAttribute('x',x);lbl.setAttribute('y',H-margin.bottom+14);
+    lbl.setAttribute('text-anchor','middle');lbl.setAttribute('font-size','10');
+    lbl.setAttribute('fill','#4a4540');lbl.textContent=y;
+    svg.appendChild(lbl);
+  });
+
+  // Y-axis label
+  const yAxisLbl=document.createElementNS(NS,'text');
+  yAxisLbl.setAttribute('x',10);yAxisLbl.setAttribute('y',margin.top+iH/2);
+  yAxisLbl.setAttribute('text-anchor','middle');yAxisLbl.setAttribute('font-size','10');
+  yAxisLbl.setAttribute('fill','#8a8078');yAxisLbl.setAttribute('transform',`rotate(-90,10,${margin.top+iH/2})`);
+  yAxisLbl.textContent='Rank';
+  svg.appendChild(yAxisLbl);
+
+  // Draw lines per company
+  // Use cubic bezier through rank points for smooth curves
+  function coColor(name){
+    const fk=CO_FAMILY[name];
+    if(fk&&FAMILY_META[fk])return FAMILY_META[fk].color;
+    return STANDALONE_COLOR;
+  }
+
+  const lineEls=[]; // {path, dots, leftLbl, rightLbl, name}
+  companies.forEach(co=>{
+    const color=coColor(co.name);
+    // Build segments: consecutive years where company is ranked
+    const segments=[];
+    let seg=[];
+    YEARS.forEach((y,i)=>{
+      const r=co.ranks[y];
+      if(r){
+        seg.push({i,r,y});
+      } else {
+        if(seg.length>0){segments.push(seg);seg=[];}
+      }
+    });
+    if(seg.length>0)segments.push(seg);
+    if(segments.length===0)return;
+
+    const paths=[];
+    segments.forEach(seg=>{
+      if(seg.length===1){
+        // Single point — draw a small horizontal stub
+        const x=xScale(seg[0].i),y=yScale(seg[0].r);
+        paths.push(`M${x-6},${y} L${x+6},${y}`);
+      } else {
+        // Smooth cubic bezier through consecutive points
+        let d=`M${xScale(seg[0].i)},${yScale(seg[0].r)}`;
+        for(let k=1;k<seg.length;k++){
+          const x0=xScale(seg[k-1].i),y0=yScale(seg[k-1].r);
+          const x1=xScale(seg[k].i),y1=yScale(seg[k].r);
+          const cx=(x0+x1)/2;
+          d+=` C${cx},${y0} ${cx},${y1} ${x1},${y1}`;
+        }
+        paths.push(d);
+      }
+    });
+
+    const pathEl=document.createElementNS(NS,'path');
+    pathEl.setAttribute('d',paths.join(' '));
+    pathEl.setAttribute('fill','none');
+    pathEl.setAttribute('stroke',color);
+    pathEl.setAttribute('stroke-width','1.8');
+    pathEl.setAttribute('stroke-opacity','0.45');
+    pathEl.setAttribute('stroke-linecap','round');
+    pathEl.style.cursor='pointer';
+
+    // Dots at each ranked year
+    const dotEls=[];
+    segments.forEach(seg=>seg.forEach(pt=>{
+      const dot=document.createElementNS(NS,'circle');
+      dot.setAttribute('cx',xScale(pt.i));dot.setAttribute('cy',yScale(pt.r));
+      dot.setAttribute('r','3');dot.setAttribute('fill',color);
+      dot.setAttribute('fill-opacity','0.5');dot.style.cursor='pointer';
+      dotEls.push(dot);
+    }));
+
+    // Labels: left (first appearance in 1950) and right (last/latest)
+    const firstSeg=segments[0],lastSeg=segments[segments.length-1];
+    const firstPt=firstSeg[0],lastPt=lastSeg[lastSeg.length-1];
+    const flag=FLAGS[co.country]||'';
+
+    let leftLbl=null;
+    if(firstPt.i===0){
+      leftLbl=document.createElementNS(NS,'text');
+      leftLbl.setAttribute('x',margin.left-8);leftLbl.setAttribute('y',yScale(firstPt.r)+4);
+      leftLbl.setAttribute('text-anchor','end');leftLbl.setAttribute('font-size','10');
+      leftLbl.setAttribute('fill',color);leftLbl.setAttribute('fill-opacity','0.7');
+      leftLbl.textContent=`${flag} ${co.name}`;
+    }
+
+    let rightLbl=null;
+    if(lastPt.i===YEARS.length-1){
+      rightLbl=document.createElementNS(NS,'text');
+      rightLbl.setAttribute('x',margin.left+iW+8);rightLbl.setAttribute('y',yScale(lastPt.r)+4);
+      rightLbl.setAttribute('text-anchor','start');rightLbl.setAttribute('font-size','10');
+      rightLbl.setAttribute('fill',color);rightLbl.setAttribute('fill-opacity','0.7');
+      rightLbl.textContent=`${flag} ${co.name}`;
+    }
+
+    lineEls.push({pathEl,dotEls,leftLbl,rightLbl,name:co.name,color});
+  });
+
+  // Render in order (all paths first, then dots, then labels — so hover works cleanly)
+  lineEls.forEach(({pathEl})=>svg.appendChild(pathEl));
+  lineEls.forEach(({dotEls})=>dotEls.forEach(d=>svg.appendChild(d)));
+  lineEls.forEach(({leftLbl,rightLbl})=>{if(leftLbl)svg.appendChild(leftLbl);if(rightLbl)svg.appendChild(rightLbl);});
+
+  // Hover interaction
+  function highlight(name){
+    lineEls.forEach(le=>{
+      const on=le.name===name;
+      le.pathEl.setAttribute('stroke-opacity',on?'1':'0.07');
+      le.pathEl.setAttribute('stroke-width',on?'2.8':'1.8');
+      le.dotEls.forEach(d=>{d.setAttribute('fill-opacity',on?'1':'0.05');d.setAttribute('r',on?'4':'3');});
+      if(le.leftLbl){le.leftLbl.setAttribute('fill-opacity',on?'1':'0.07');le.leftLbl.setAttribute('font-weight',on?'500':'normal');}
+      if(le.rightLbl){le.rightLbl.setAttribute('fill-opacity',on?'1':'0.07');le.rightLbl.setAttribute('font-weight',on?'500':'normal');}
+    });
+  }
+  function reset(){
+    lineEls.forEach(le=>{
+      le.pathEl.setAttribute('stroke-opacity','0.45');
+      le.pathEl.setAttribute('stroke-width','1.8');
+      le.dotEls.forEach(d=>{d.setAttribute('fill-opacity','0.5');d.setAttribute('r','3');});
+      if(le.leftLbl){le.leftLbl.setAttribute('fill-opacity','0.7');le.leftLbl.removeAttribute('font-weight');}
+      if(le.rightLbl){le.rightLbl.setAttribute('fill-opacity','0.7');le.rightLbl.removeAttribute('font-weight');}
+    });
+  }
+
+  lineEls.forEach(le=>{
+    [le.pathEl,...le.dotEls].forEach(el=>{
+      el.addEventListener('mouseenter',()=>highlight(le.name));
+      el.addEventListener('mouseleave',reset);
+    });
+  });
+
+  wrap.appendChild(svg);
+}
+
 function squarifyLayout(items,x0,y0,x1,y1){
   const result=[];
   if(!items||!items.length)return result;
@@ -1983,6 +2194,7 @@ document.querySelectorAll('.tab-btn').forEach(b=>{
     document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
     document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+    if(b.dataset.tab==='bump')buildBump();
     if(b.dataset.tab==='bubble')buildBubble();
     if(b.dataset.tab==='treemap-year')buildTreemapYear();
     if(b.dataset.tab==='treemap-agg')buildTreemap();
