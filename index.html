@@ -179,6 +179,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
   <button class="tab-btn" data-tab="bubble">Bubble</button>
   <button class="tab-btn" data-tab="treemap-year">Treemap-Year</button>
   <button class="tab-btn" data-tab="treemap-agg">Treemap-Aggregate</button>
+  <button class="tab-btn" data-tab="upset">Therapeutic Areas</button>
 </div>
 
 <div id="search-bar">
@@ -284,6 +285,22 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     </div>
     <div id="treemap-wrap"></div>
     <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-upset">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Therapeutic Areas by Company</div>
+      <div class="hm-desc">Top-25 companies for the selected year and their therapeutic focus areas. Filled dot = company had drugs in that area. Only companies that appeared in the top 25 are shown.</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-era-label">Early era — estimated figures</div>
+      <div class="nav-row" id="upset-nav-early"></div>
+      <div class="nav-era-label">Modern era — reported figures</div>
+      <div class="nav-row" id="upset-nav-modern"></div>
+    </div>
+    <div id="upset-wrap"></div>
   </div>
 </div>
 
@@ -934,6 +951,317 @@ const FAMILY_META={
 };
 const STANDALONE_COLOR='#a39b90';
 
+// ── Therapeutic Area mapping ─────────────────────────────────────────────────
+const DRUG_TA={
+  // Oncology
+  '6-MP':['oncology'],'Purinethol':['oncology'],'Abraxane':['oncology'],
+  'Adcetris':['oncology'],'Adstiladrin':['oncology'],'Adriamycin':['oncology'],
+  'Alimta':['oncology'],'Alkeran':['oncology'],'Arimidex':['oncology'],
+  'Aredia':['oncology'],'Avastin':['oncology'],'Calquence':['oncology'],
+  'Carvykti':['oncology'],'Cytoxan':['oncology'],'Darzalex':['oncology'],
+  'Dato-DXd':['oncology'],'Enhertu':['oncology'],'Erbitux':['oncology'],
+  'Ethyol':['oncology'],'Eulexin':['oncology'],'Faslodex':['oncology'],
+  'Gemzar':['oncology'],'Gleevec':['oncology'],'Herceptin':['oncology'],
+  'Ibrance':['oncology'],'Imbruvica':['oncology'],'Imfinzi':['oncology'],
+  'Intron A':['oncology','infectious-disease'],'Jemperli':['oncology'],
+  'Keytruda':['oncology'],'Kisqali':['oncology'],'Kytril':['oncology'],
+  'Lanvis':['oncology'],'Libtayo':['oncology'],'Lupron':['oncology'],
+  'Lynparza':['oncology'],'MabThera':['oncology','immunology'],
+  'Methotrexate':['oncology','immunology'],'Ninlaro':['oncology'],
+  'Nolvadex':['oncology'],'Nubeqa':['oncology'],'Opdivo':['oncology'],
+  'Padcev':['oncology'],'Perjeta':['oncology'],'Platinol':['oncology'],
+  'Pluvicto':['oncology'],'Polivy':['oncology'],'Pomalyst':['oncology'],
+  'Reblozyl':['oncology','rare-disease'],'Revlimid':['oncology'],
+  'Rituxan':['oncology','immunology'],'Sarclisa':['oncology'],
+  'Sprycel':['oncology'],'Tagrisso':['oncology'],'Tarceva':['oncology'],
+  'Tasigna':['oncology'],'Taxol':['oncology'],'Taxotere':['oncology'],
+  'Tecentriq':['oncology'],'Thalomid':['oncology','rare-disease'],
+  'Trodelvy':['oncology'],'Tukysa':['oncology'],'VEGF Trap':['oncology'],
+  'Vanflyta':['oncology'],'Vantas':['oncology'],'Velcade':['oncology'],
+  'Verzenio':['oncology'],'Vyloy':['oncology'],'Xospata':['oncology'],
+  'Xtandi':['oncology'],'Yervoy':['oncology'],'Zaltrap':['oncology'],
+  'Zevalin':['oncology'],'Zometa':['oncology'],
+  // Cardio-metabolic
+  'Actos':['cardio-metabolic'],'Adalat':['cardio-metabolic'],
+  'Adrenalin':['cardio-metabolic'],'Aggrenox':['cardio-metabolic'],
+  'Aldactone':['cardio-metabolic'],'Aldomet':['cardio-metabolic'],
+  'Apresoline':['cardio-metabolic'],'Aprovel':['cardio-metabolic'],
+  'Aspirin':['cardio-metabolic'],'Atacand':['cardio-metabolic'],
+  'Avandia':['cardio-metabolic'],'Avapro':['cardio-metabolic'],
+  'Bayer Aspirin':['cardio-metabolic'],'Brilinta':['cardio-metabolic'],
+  'Bufferin':['cardio-metabolic'],'Bystolic':['cardio-metabolic'],
+  'Calan':['cardio-metabolic'],'Capoten':['cardio-metabolic'],
+  'Cardizem':['cardio-metabolic'],'Catapres':['cardio-metabolic'],
+  'Catapresan':['cardio-metabolic'],'Cozaar':['cardio-metabolic'],
+  'Crestor':['cardio-metabolic'],'Diabinese':['cardio-metabolic'],
+  'Diovan':['cardio-metabolic'],'Diuril':['cardio-metabolic'],
+  'Dyazide':['cardio-metabolic'],'Eliquis':['cardio-metabolic'],
+  'Eminase':['cardio-metabolic'],'EpiPen':['cardio-metabolic'],
+  'Entresto':['cardio-metabolic'],'Evista':['cardio-metabolic'],
+  'Farxiga':['cardio-metabolic'],'Glucophage':['cardio-metabolic'],
+  'Humalog':['cardio-metabolic'],'Humulin':['cardio-metabolic'],
+  'Hytrin':['cardio-metabolic'],'Inderal':['cardio-metabolic'],
+  'Insulin':['cardio-metabolic'],'Januvia':['cardio-metabolic'],
+  'Jardiance':['cardio-metabolic'],'Lantus':['cardio-metabolic'],
+  'Lasix':['cardio-metabolic'],'Lipitor':['cardio-metabolic'],
+  'Lixiana':['cardio-metabolic'],'Lopid':['cardio-metabolic'],
+  'Lopressor':['cardio-metabolic'],'Lovenox':['cardio-metabolic'],
+  'Lovaza':['cardio-metabolic'],'MariTide':['cardio-metabolic'],
+  'Mevacor':['cardio-metabolic'],'Mexitil':['cardio-metabolic'],
+  'Minipress':['cardio-metabolic'],'Mounjaro':['cardio-metabolic'],
+  'Multaq':['cardio-metabolic'],'Niaspan':['cardio-metabolic'],
+  'Norvasc':['cardio-metabolic'],'NovoRapid':['cardio-metabolic'],
+  'Orinase':['cardio-metabolic'],'Ozempic':['cardio-metabolic'],
+  'Plavix':['cardio-metabolic'],'Pradaxa':['cardio-metabolic'],
+  'Praluent':['cardio-metabolic'],'Pravachol':['cardio-metabolic'],
+  'Procardia':['cardio-metabolic'],'Repatha':['cardio-metabolic'],
+  'Rybelsus':['cardio-metabolic'],'Saxenda':['cardio-metabolic'],
+  'Serpasil':['cardio-metabolic'],'Streptokinase':['cardio-metabolic'],
+  'Synthroid':['cardio-metabolic'],'Tenormin':['cardio-metabolic'],
+  'Trajenta':['cardio-metabolic'],'Tresiba':['cardio-metabolic'],
+  'TriCor':['cardio-metabolic'],'Trulicity':['cardio-metabolic'],
+  'Twynsta':['cardio-metabolic'],'Vasotec':['cardio-metabolic'],
+  'Victoza':['cardio-metabolic'],'Vytorin':['cardio-metabolic'],
+  'Wegovy':['cardio-metabolic'],'Xarelto':['cardio-metabolic'],
+  'Zepbound':['cardio-metabolic'],'Zestril':['cardio-metabolic'],
+  'Zetia':['cardio-metabolic'],'Zocor':['cardio-metabolic'],
+  // Neuroscience
+  'Abilify':['neuroscience'],'Adderall XR':['neuroscience'],
+  'Aducanumab':['neuroscience'],'Ambien':['neuroscience'],
+  'Anacin':['neuroscience'],'Bellergal':['neuroscience'],
+  'Botox':['neuroscience'],'Briviact':['neuroscience'],
+  'Cafergot':['neuroscience'],'Campral':['neuroscience'],
+  'Celebrex':['neuroscience'],'Celexa':['neuroscience'],
+  'Clozaril':['neuroscience'],'Compazine':['neuroscience'],
+  'Cymbalta':['neuroscience'],'Depakote':['neuroscience'],
+  'Darvon':['neuroscience'],'Dexedrine':['neuroscience'],
+  'Dilantin':['neuroscience'],'Donanemab':['neuroscience'],
+  'Dramamine':['neuroscience'],'Effexor':['neuroscience'],
+  'Excedrin':['neuroscience'],'Feldene':['neuroscience'],
+  'Halcion':['neuroscience'],'Haldol':['neuroscience'],
+  'Hydergine':['neuroscience'],'Indocin':['neuroscience'],
+  'Journavx':['neuroscience'],'Kisunla':['neuroscience'],
+  'Largactil':['neuroscience'],'Leqembi':['neuroscience'],
+  'Librium':['neuroscience'],'Lidoderm':['neuroscience'],
+  'Lodine':['neuroscience'],'Lyrica':['neuroscience'],
+  'Midol':['neuroscience'],'Miltown':['neuroscience'],
+  'Mobic':['neuroscience'],'Motrin':['neuroscience'],
+  'Namenda':['neuroscience'],'Nembutal':['neuroscience'],
+  'Neurontin':['neuroscience'],'Nurtec':['neuroscience'],
+  'Nuvigil':['neuroscience'],'Ocrevus':['neuroscience'],
+  'Parlodel':['neuroscience'],'Percocet':['neuroscience'],
+  'Placidyl':['neuroscience'],'Plegridy':['neuroscience'],
+  'Prozac':['neuroscience'],'Rheumacin':['neuroscience'],
+  'Risperdal':['neuroscience'],'Ritalin':['neuroscience'],
+  'Savella':['neuroscience'],'Seroquel':['neuroscience'],
+  'Soma':['neuroscience'],'Tarlige':['neuroscience'],
+  'Tecfidera':['neuroscience'],'Tegretol':['neuroscience'],
+  'Thorazine':['neuroscience'],'Tofranil':['neuroscience'],
+  'Tranxene':['neuroscience'],'Trintellix':['neuroscience'],
+  'Tylenol':['neuroscience'],'Tysabri':['neuroscience'],
+  'Valium':['neuroscience'],'Vimpat':['neuroscience'],
+  'Voltaren':['neuroscience'],'Voltaren Gel':['neuroscience'],
+  'Vyvanse':['neuroscience'],'Zyprexa':['neuroscience'],
+  'Zoloft':['neuroscience'],
+  // Immunology
+  'Asacol':['immunology'],'Aubagio':['neuroscience','immunology'],
+  'Avonex':['neuroscience'],'Benlysta':['immunology'],
+  'Betaferon':['neuroscience'],'Betaseron':['neuroscience'],
+  'Bimzelx':['immunology'],'Celestone':['immunology'],
+  'Cosentyx':['immunology'],'Cortef':['immunology'],
+  'Cortisone':['immunology'],'Dupixent':['immunology','respiratory'],
+  'Enbrel':['immunology'],'Entyvio':['immunology'],
+  'Humira':['immunology'],'Imuran':['immunology'],
+  'Kesimpta':['neuroscience'],'Kevzara':['immunology'],
+  'Lialda':['immunology'],'Meticorten':['immunology'],
+  'Neoral':['immunology'],'Otezla':['immunology'],
+  'Remicade':['immunology'],'Rinvoq':['immunology'],
+  'Sandimmune':['immunology'],'Skyrizi':['immunology'],
+  'Spevigo':['immunology'],'Stelara':['immunology'],
+  'Taltz':['immunology'],'Tremfya':['immunology'],
+  'Volon':['immunology'],
+  // Infectious disease
+  'AmBisome':['infectious-disease'],'Amoxicillin':['infectious-disease'],
+  'Antiformin':['infectious-disease'],'Aralen':['infectious-disease'],
+  'Atripla':['infectious-disease'],'Augmentin':['infectious-disease'],
+  'Aureomycin':['infectious-disease'],'Bactrim':['infectious-disease'],
+  'Baraclude':['infectious-disease'],'Biaxin':['infectious-disease'],
+  'Beyfortus':['infectious-disease','vaccines'],'Biktarvy':['infectious-disease'],
+  'Broxil':['infectious-disease'],'Cabenuva':['infectious-disease'],
+  'Ceclor':['infectious-disease'],'Chloromycetin':['infectious-disease'],
+  'Cipro':['infectious-disease'],'Claforan':['infectious-disease'],
+  'Clarithromycin':['infectious-disease'],'Clont':['infectious-disease'],
+  'Daraprim':['infectious-disease'],'Descovy':['infectious-disease'],
+  'Diflucan':['infectious-disease'],'Elkosin':['infectious-disease'],
+  'Emtriva':['infectious-disease'],'Epivir':['infectious-disease'],
+  'Erythromycin':['infectious-disease'],'Griseofulvin':['infectious-disease'],
+  'Harvoni':['infectious-disease'],'Hepsera':['infectious-disease'],
+  'Hibitane':['infectious-disease'],'Hivid':['infectious-disease'],
+  'Incivek':['infectious-disease'],'Infergen':['infectious-disease'],
+  'Invirase':['infectious-disease'],'Kaletra':['infectious-disease'],
+  'Keflex':['infectious-disease'],'Keflin':['infectious-disease'],
+  'Kefzol':['infectious-disease'],'Lamisil':['infectious-disease'],
+  'Malarone':['infectious-disease'],'Molnupiravir':['infectious-disease'],
+  'Neoprontosil':['infectious-disease'],'Nystatin':['infectious-disease'],
+  'Paludrine':['infectious-disease'],'Pantecin':['infectious-disease'],
+  'Paxlovid':['infectious-disease'],'PegIntron':['infectious-disease'],
+  'Penbritin':['infectious-disease'],'Penicillin':['infectious-disease'],
+  'Pentids':['infectious-disease'],'Prevymis':['infectious-disease'],
+  'Primaxin':['infectious-disease'],'REGN-COV2':['infectious-disease'],
+  'Remdesivir':['infectious-disease'],'Retrovir':['infectious-disease'],
+  'Ritonavir':['infectious-disease'],'Rocephin':['infectious-disease'],
+  'SKF antibiotics':['infectious-disease'],'Septra':['infectious-disease'],
+  'Sovaldi':['infectious-disease'],'Streptomycin':['infectious-disease'],
+  'Sulfonamides':['infectious-disease'],'Sulphonamides':['infectious-disease'],
+  'Sunlenca':['infectious-disease'],'Tamiflu':['infectious-disease'],
+  'Telaprevir':['infectious-disease'],'Terramycin':['infectious-disease'],
+  'Tetracyn':['infectious-disease'],'Tinactin':['infectious-disease'],
+  'Truvada':['infectious-disease'],'Veklury':['infectious-disease'],
+  'Vibramycin':['infectious-disease'],'Viramune':['infectious-disease'],
+  'Viread':['infectious-disease'],'Vistide':['infectious-disease'],
+  'Winthrop':['infectious-disease'],'Winthrop products':['infectious-disease'],
+  'Zagam':['infectious-disease'],'Zinnat':['infectious-disease'],
+  'Zovirax':['infectious-disease'],'Zyvox':['infectious-disease'],
+  // Vaccines
+  'Arexvy':['vaccines'],'COVID vaccine':['vaccines'],
+  'FluMist':['vaccines'],'Gardasil':['vaccines'],'Gardasil 9':['vaccines'],
+  'mRESVIA':['vaccines'],'mRNA-1273 COVID vaccine':['vaccines'],
+  'mRNA-1283 COVID':['vaccines'],'mRNA-1647':['vaccines'],
+  'mRNA-4157':['oncology','vaccines'],'Prevnar':['vaccines'],
+  'Prevnar 13':['vaccines'],'Prevnar 20':['vaccines'],
+  'Salk vaccine':['vaccines'],'Shingrix':['vaccines'],'Synagis':['vaccines'],
+  // Respiratory
+  'Accolate':['respiratory'],'Advair':['respiratory'],
+  'Alupent':['respiratory'],'Becotide':['respiratory'],
+  'Bisolvon':['respiratory'],'Daxas':['respiratory'],
+  'Nasonex':['respiratory'],'Ofev':['respiratory'],
+  'Pulmozyme':['respiratory','rare-disease'],'Singulair':['respiratory'],
+  'Spiriva':['respiratory'],'Survanta':['respiratory'],
+  'Symbicort':['respiratory'],'Trelegy':['respiratory'],
+  'Ventolin':['respiratory'],'Winrevair':['respiratory'],
+  // Rare disease
+  'Altuviiio':['rare-disease'],'Alyftrek':['rare-disease'],
+  'Arcalyst':['rare-disease'],'Berinert':['rare-disease'],
+  'Casgevy':['rare-disease'],'Cinryze':['rare-disease'],
+  'Evenity':['rare-disease'],'Firazyr':['rare-disease'],
+  'Fosrenol':['rare-disease'],'Hemlibra':['rare-disease'],
+  'Hemgenix':['rare-disease'],'Hizentra':['rare-disease'],
+  'Kalydeco':['rare-disease'],'Kanuma':['rare-disease'],
+  'Kcentra':['rare-disease'],'Kogenate':['rare-disease'],
+  'Nutropin':['rare-disease'],'Orkambi':['rare-disease'],
+  'Privigen':['rare-disease'],'Skyclarys':['rare-disease'],
+  'Soliris':['rare-disease'],'Spinraza':['rare-disease'],
+  'Strensiq':['rare-disease'],'Symdeko':['rare-disease'],
+  'Trikafta':['rare-disease'],'Ultomiris':['rare-disease'],
+  'Vyvgart':['rare-disease'],'Zolgensma':['rare-disease'],
+};
+const TA_KEYS=['oncology','cardio-metabolic','neuroscience','immunology','infectious-disease','vaccines','respiratory','rare-disease'];
+const TA_LABELS=['Oncology','Cardio-metabolic','Neuroscience','Immunology','Infectious Disease','Vaccines','Respiratory','Rare Disease'];
+let upsetYear=2025;
+
+function mkUpsetNav(yrs,id){
+  const el=document.getElementById(id);
+  yrs.forEach(y=>{
+    const b=document.createElement('button');
+    b.className='year-btn'+(y===upsetYear?' active':'');
+    b.textContent=y;
+    b.onclick=()=>{upsetYear=y;buildUpset();};
+    el.appendChild(b);
+  });
+}
+
+function buildUpset(){
+  const wrap=document.getElementById('upset-wrap');
+  wrap.innerHTML='';
+  const rows=data[upsetYear].rows.filter(r=>r.cap>0);
+
+  // Build TA presence matrix
+  const matrix=rows.map(r=>{
+    const tas=new Set();
+    const byTA={};
+    TA_KEYS.forEach(k=>{byTA[k]=[];});
+    (r.drugs||[]).forEach(d=>{
+      const key=d.replace(/\s*\(.*?\)/g,'').trim();
+      (DRUG_TA[key]||[]).forEach(t=>{tas.add(t);byTA[t].push(key);});
+    });
+    return{company:r.company,country:r.country,cap:r.cap,tas,byTA};
+  });
+
+  const LABEL_W=195,COL_W=85,TOP_PAD=105,ROW_H=30,R_PAD=50;
+  const svgW=LABEL_W+TA_KEYS.length*COL_W+R_PAD;
+  const svgH=TOP_PAD+rows.length*ROW_H+60;
+  const NS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('width',svgW);
+  svg.setAttribute('viewBox',`0 0 ${svgW} ${svgH}`);
+  svg.style.cssText='max-width:100%;font-family:\'DM Mono\',monospace;display:block;';
+
+  function el(tag,attrs,text){
+    const e=document.createElementNS(NS,tag);
+    Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+    if(text!==undefined)e.textContent=text;
+    return e;
+  }
+
+  // Column header lines
+  TA_KEYS.forEach((_,ci)=>{
+    const cx=LABEL_W+ci*COL_W+COL_W/2;
+    svg.appendChild(el('line',{x1:cx,y1:TOP_PAD,x2:cx,y2:TOP_PAD+rows.length*ROW_H,stroke:'var(--rule)',opacity:'0.5','stroke-width':'1'}));
+  });
+
+  // Rotated column headers
+  TA_LABELS.forEach((label,ci)=>{
+    const cx=LABEL_W+ci*COL_W+COL_W/2;
+    const ty=TOP_PAD-8;
+    const t=el('text',{x:cx,y:ty,'text-anchor':'end','font-size':'11','fill':'var(--ink-2)',transform:`rotate(-45 ${cx} ${ty})`},label);
+    svg.appendChild(t);
+  });
+
+  // Rows
+  matrix.forEach((co,ri)=>{
+    const y=TOP_PAD+ri*ROW_H;
+    svg.appendChild(el('rect',{x:0,y,width:svgW,height:ROW_H,fill:ri%2===0?'rgba(0,0,0,.03)':'none'}));
+
+    const flag=FLAGS[co.country]||'';
+    svg.appendChild(el('text',{x:LABEL_W-8,y:y+ROW_H/2+4,'text-anchor':'end','font-size':'11','fill':'var(--ink)'},`${ri+1}. ${flag} ${co.company}`));
+
+    TA_KEYS.forEach((ta,ci)=>{
+      const cx=LABEL_W+ci*COL_W+COL_W/2;
+      const cy=y+ROW_H/2;
+      const present=co.tas.has(ta);
+      const c=el('circle',{cx,cy,r:present?9:3.5,fill:present?'var(--accent)':'var(--rule)',opacity:present?'0.82':'0.6'});
+      if(present&&co.byTA[ta].length){
+        const ti=document.createElementNS(NS,'title');
+        ti.textContent=co.byTA[ta].join(', ');
+        c.appendChild(ti);
+      }
+      svg.appendChild(c);
+    });
+
+    // TA breadth count
+    const breadth=co.tas.size;
+    svg.appendChild(el('text',{x:LABEL_W+TA_KEYS.length*COL_W+8,y:y+ROW_H/2+4,'font-size':'10','fill':'var(--ink-3)'},breadth>0?breadth:''));
+  });
+
+  // Bottom count bars
+  const BAR_BASE=TOP_PAD+rows.length*ROW_H+40;
+  const BAR_MAX=28;
+  TA_KEYS.forEach((ta,ci)=>{
+    const count=matrix.filter(co=>co.tas.has(ta)).length;
+    const cx=LABEL_W+ci*COL_W+COL_W/2;
+    const barH=rows.length>0?Math.round((count/rows.length)*BAR_MAX):0;
+    if(barH>0)svg.appendChild(el('rect',{x:cx-7,y:BAR_BASE-barH,width:14,height:barH,fill:'var(--accent)',opacity:'0.35'}));
+    svg.appendChild(el('text',{x:cx,y:BAR_BASE+11,'text-anchor':'middle','font-size':'10','fill':'var(--ink-3)'},count));
+  });
+  svg.appendChild(el('text',{x:LABEL_W-8,y:BAR_BASE+11,'text-anchor':'end','font-size':'10','fill':'var(--ink-3)'},'# companies:'));
+
+  wrap.appendChild(svg);
+
+  document.querySelectorAll('#upset-nav-early .year-btn,#upset-nav-modern .year-btn').forEach(b=>{
+    b.classList.toggle('active',+b.textContent===upsetYear);
+  });
+}
+
 function fmtAdj(b){if(b>=1000)return'$'+b.toFixed(0)+'B';if(b>=100)return'$'+Math.round(b)+'B';if(b>=10)return'$'+b.toFixed(1)+'B';if(b>=1)return'$'+b.toFixed(2)+'B';return'$'+(b*1000).toFixed(0)+'M';}
 
 let bubbleBuilt=false;
@@ -1342,7 +1670,7 @@ async function openPanel(companyName){
     hintDiv.textContent='';
   } else {
     noneDiv.textContent='';
-    hintDiv.textContent='Highlighted node = selected company. Arrows show mergers & acquisitions over time.';
+    hintDiv.textContent='Highlighted node = selected company. Arrows show mergers & acquisitions among companies that appeared in the top 25.';
     chartDiv.innerHTML='<p style="font-size:11px;color:#999;padding:1rem 0;text-align:center;">Loading…</p>';
     const family=LINEAGE[familyKey];
     const nodeId=family.nodes[companyName];
@@ -1656,6 +1984,7 @@ document.querySelectorAll('.tab-btn').forEach(b=>{
     if(b.dataset.tab==='treemap-year')buildTreemapYear();
     if(b.dataset.tab==='treemap-agg')buildTreemap();
     if(b.dataset.tab==='countries')buildCountries();
+    if(b.dataset.tab==='upset')buildUpset();
     applySearch();
   });
 });
@@ -1818,6 +2147,7 @@ function buildCountries(){
 }
 
 mkNav(EARLY,'nav-early');mkNav(MODERN,'nav-modern');renderR();buildHM();
+mkUpsetNav(EARLY,'upset-nav-early');mkUpsetNav(MODERN,'upset-nav-modern');
 </script>
 </body>
 </html>
