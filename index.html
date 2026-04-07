@@ -1187,7 +1187,7 @@ function buildUpset(){
     return{company:r.company,country:r.country,cap:r.cap,tas,byTA};
   });
 
-  const LABEL_W=195,COL_W=85,TOP_PAD=105,ROW_H=30,R_PAD=50;
+  const LABEL_W=195,COL_W=85,TOP_PAD=120,ROW_H=30,R_PAD=55;
   const svgW=LABEL_W+TA_KEYS.length*COL_W+R_PAD;
   const svgH=TOP_PAD+rows.length*ROW_H+60;
   const NS='http://www.w3.org/2000/svg';
@@ -1209,13 +1209,16 @@ function buildUpset(){
     svg.appendChild(el('line',{x1:cx,y1:TOP_PAD,x2:cx,y2:TOP_PAD+rows.length*ROW_H,stroke:'var(--rule)',opacity:'0.5','stroke-width':'1'}));
   });
 
-  // Rotated column headers
+  // Rotated column headers (left-anchored at column left edge)
+  const ty=TOP_PAD-6;
   TA_LABELS.forEach((label,ci)=>{
-    const cx=LABEL_W+ci*COL_W+COL_W/2;
-    const ty=TOP_PAD-8;
-    const t=el('text',{x:cx,y:ty,'text-anchor':'end','font-size':'11','fill':'var(--ink-2)',transform:`rotate(-45 ${cx} ${ty})`},label);
+    const lx=LABEL_W+ci*COL_W;
+    const t=el('text',{x:lx,y:ty,'text-anchor':'start','font-size':'11','fill':'var(--ink-2)',transform:`rotate(-45 ${lx} ${ty})`},label);
     svg.appendChild(t);
   });
+  // "(total)" header for the breadth count column
+  const tx=LABEL_W+TA_KEYS.length*COL_W+8;
+  svg.appendChild(el('text',{x:tx,y:ty,'text-anchor':'start','font-size':'11','fill':'var(--ink-3)',transform:`rotate(-45 ${tx} ${ty})`},'(total)'));
 
   // Rows
   matrix.forEach((co,ri)=>{
