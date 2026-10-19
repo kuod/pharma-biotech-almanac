@@ -45,4 +45,4 @@ Concentration, Slope, Value Flow, TA Stream, Lineage, Growth and Churn tabs live
 
 ## No Build / Data Check
 
-There is no build system or test suite. Validate changes by opening `index.html` in a browser, and run `node tools/check-data.js` (add `--verbose` to list unmapped drugs) to sanity-check the dataset: duplicates, flag coverage, missing drugs, unsorted source rows.
+There is no build system; CI (`.github/workflows/check.yml`) runs `node tools/check-scripts.js` and `node tools/check-data.js`. Validate changes by opening `index.html` in a browser, and run `node tools/check-data.js` (add `--verbose` to list unmapped drugs) to sanity-check the dataset: duplicates, flag coverage, missing drugs, unsorted source rows.

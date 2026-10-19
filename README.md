@@ -53,7 +53,7 @@ Coverage: 16 snapshots (1950–2025) · 10 countries (US, UK, Switzerland, Germa
 
 Pre-1990 figures are estimates compiled from historical industry analyses and annual reports. Post-1990 figures are reported market capitalizations. All values are in USD billions. Rows are sorted by market cap at load, so rank always follows size.
 
-Run `node tools/check-data.js` to sanity-check the embedded dataset (duplicates, country flags, missing drugs, unsorted source rows).
+Run `node tools/check-scripts.js` (inline-script syntax) and `node tools/check-data.js` to sanity-check the embedded dataset (duplicates, country flags, missing drugs, unsorted source rows).
 
 ## License
 
