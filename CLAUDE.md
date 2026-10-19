@@ -37,6 +37,14 @@ Each row in `data[year].rows`:
 - `cap: 0` or negative means the company is excluded from rendering that year
 - Pre-1990 data is estimated; post-1990 is sourced from reported figures
 
-## No Build / No Tests
+## Normalization
 
-There is no build system, linter, or test suite. Validate changes by opening `index.html` in a browser.
+Immediately after the `data` object, rows with `cap<=0` are dropped and each year is sorted by `cap` descending, so array index + 1 is the rank everywhere. Source order in `data` doesn't matter. Use `esc()` when interpolating company/drug names into `innerHTML`.
+
+## Additional views (second `<script>` block)
+
+Concentration, Slope, Value Flow, TA Stream, Lineage, Growth and Churn tabs live in a self-contained IIFE at the end of `index.html`. They reuse `data`, `CPI_MULT`, `CO_FAMILY`, `LINEAGE`, `DRUG_TA`, `fmt`/`fmtAdj`, the shared `#hm-tip` tooltip and `openPanel`. Each has a `build*` function registered in `builders` and re-run on tab click. Value Flow/TA Stream split a company's cap evenly over its listed drugs, then over each drug's TAs (illustrative, not revenue).
+
+## No Build / Data Check
+
+There is no build system or test suite. Validate changes by opening `index.html` in a browser, and run `node tools/check-data.js` (add `--verbose` to list unmapped drugs) to sanity-check the dataset: duplicates, flag coverage, missing drugs, unsorted source rows.

@@ -98,8 +98,27 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
 #hm-tip .t-co{font-weight:600;font-size:13px;margin-bottom:4px;}
 #hm-tip .t-cap{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:#f0c070;margin-bottom:2px;}
 #hm-tip .t-rk{font-size:11px;color:rgba(245,242,235,.6);margin-bottom:4px;}
-#hm-tip .t-dr{font-size:11px;color:rgba(245,242,235,.5);border-top:1px solid rgba(255,255,255,.1);padding-top:5px;margin-top:3px;}
+#hm-tip .t-dr{white-space:pre-line;font-size:11px;color:rgba(245,242,235,.5);border-top:1px solid rgba(255,255,255,.1);padding-top:5px;margin-top:3px;}
 .credit{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--rule);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);text-align:center;}
+/* New views */
+.vz-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;margin:1.25rem 0 1rem;}
+.vz-ctl{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+.vz-ctl select{font:inherit;font-size:12px;letter-spacing:.03em;padding:5px 8px;border:1px solid var(--rule);background:var(--bg-card);color:var(--ink);border-radius:2px;}
+.vz-seg{display:inline-flex;}
+.vz-seg button{font:inherit;font-size:11px;letter-spacing:.04em;text-transform:none;padding:5px 12px;border:1px solid var(--rule);margin-left:-1px;background:var(--bg-card);color:var(--ink-2);cursor:pointer;}
+.vz-seg button:first-child{border-radius:2px 0 0 2px;margin-left:0;}.vz-seg button:last-child{border-radius:0 2px 2px 0;}
+.vz-seg button.on{background:var(--ink);border-color:var(--ink);color:var(--bg);}
+.vz-wrap{background:var(--bg-card);border:1px solid var(--rule);border-radius:3px;padding:8px;}
+.vz-wrap svg{display:block;width:100%;height:auto;font-family:'DM Mono',monospace;}
+.vz-note{font-size:12px;color:var(--ink-3);line-height:1.6;margin-top:1rem;max-width:760px;}
+.lv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;margin-top:1.25rem;}
+.lv-card{background:var(--bg-card);border:1px solid var(--rule);border-radius:3px;padding:14px 16px;}
+.lv-card h3{font-family:'DM Serif Display',serif;font-weight:400;font-size:1.25rem;margin-bottom:.6rem;display:flex;align-items:center;gap:8px;}
+.lv-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.lv-chart{overflow-x:auto;}.lv-chart svg{max-width:100%;height:auto;}
+.lv-spark svg{width:100%;height:auto;font-family:'DM Mono',monospace;}
+.lv-cap{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-3);margin-top:4px;}
+@media(max-width:640px){.vz-wrap{overflow-x:auto;}.vz-wrap svg{min-width:720px;}}
 @media(max-width:640px){
   .masthead,.tab-bar{padding-left:1.25rem;padding-right:1.25rem;}
   .tab-bar{padding:0 0;}
@@ -189,6 +208,13 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
   <button class="tab-btn" data-tab="treemap-year">Treemap-Year</button>
   <button class="tab-btn" data-tab="treemap-agg">Treemap-Aggregate</button>
   <button class="tab-btn" data-tab="upset">Therapeutic Areas</button>
+  <button class="tab-btn" data-tab="conc">Concentration</button>
+  <button class="tab-btn" data-tab="slope">Slope</button>
+  <button class="tab-btn" data-tab="flow">Value Flow</button>
+  <button class="tab-btn" data-tab="stream">TA Stream</button>
+  <button class="tab-btn" data-tab="lineage">Lineage</button>
+  <button class="tab-btn" data-tab="growth">Growth</button>
+  <button class="tab-btn" data-tab="churn">Churn</button>
 </div>
 
 <div id="search-bar">
@@ -321,6 +347,96 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
       <div class="nav-row" id="upset-nav-modern"></div>
     </div>
     <div id="upset-wrap"></div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-conc">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Market Concentration, 1950–2025</div>
+      <div class="hm-desc">How much of the top-25 total do the biggest firms hold? Share held by the top 1, 5 and 10, plus the Herfindahl index (HHI) of the top 25. The dashed line is the HHI if all 25 were equal size (400). Hover a year for the leader and effective number of equal-size firms.</div>
+    </div>
+    <div class="vz-controls" id="conc-ctl"></div>
+    <div class="vz-wrap" id="conc-wrap"></div>
+    <div class="vz-note">Shares are within the top 25 only, not the whole industry. HHI uses market-cap shares of the 25 listed companies.</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-slope">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Slope Graph — Compare Two Snapshots</div>
+      <div class="hm-desc">Pick any two years. Lines connect each company’s rank at both ends: green climbed, red fell, grey held. Grey names with no line dropped out of the top 25 (left) or entered it (right). Click a company for its lineage.</div>
+    </div>
+    <div class="vz-controls" id="slope-ctl"></div>
+    <div class="vz-wrap" id="slope-wrap"></div>
+    <div class="vz-note">With “Same company” on, mergers within a corporate family (e.g. Glaxo → GlaxoSmithKline) are connected as one company; otherwise only exact names match.</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-flow">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Value Flow — Company to Therapeutic Area</div>
+      <div class="hm-desc">Each company’s market cap is split evenly across its listed flagship drugs, then across each drug’s therapeutic areas. Ribbon width = allocated value. Hover a ribbon for the drugs behind it. Labels are skipped for the smallest companies when they would collide.</div>
+    </div>
+    <div class="vz-controls" id="flow-ctl"></div>
+    <div class="vz-wrap" id="flow-wrap"></div>
+    <div class="vz-note">An illustrative allocation, not revenue: it shows where a company’s flagship portfolio sits, not how much each drug earns. Drugs without a therapeutic-area mapping are Unclassified.</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-stream">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Therapeutic Areas Over Time</div>
+      <div class="hm-desc">The same drug-based allocation as Value Flow, summed across all 16 snapshots. Switch between a centered stream, a stacked area and 100% share, in 2025 dollars or nominal.</div>
+    </div>
+    <div class="vz-controls" id="stream-ctl"></div>
+    <div class="vz-wrap" id="stream-wrap"></div>
+    <div class="vz-note">Allocation is illustrative (market cap split across flagship drugs). Grey “Unclassified” is cap tied to drugs outside the eight tracked areas, such as consumer, GI and women’s health.</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-lineage">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Lineage Atlas — Mergers and Family Strength</div>
+      <div class="hm-desc">Every corporate family with recorded mergers, drawn once. Under each diagram, bars show the family’s combined inflation-adjusted market cap across all 16 snapshots (faded = estimated).</div>
+    </div>
+    <div class="lv-grid" id="lineage-grid"></div>
+    <div class="vz-note">Combined cap sums every family member that appeared in a top 25 that year, in 2025 dollars.</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-growth">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Growth — Who Compounded Fastest</div>
+      <div class="hm-desc">Inflation-adjusted market cap at two snapshots for every company ranked in both, sorted by real compound annual growth. Open circle = start, filled = end. Click for lineage.</div>
+    </div>
+    <div class="vz-controls" id="growth-ctl"></div>
+    <div class="vz-wrap" id="growth-wrap"></div>
+    <div class="vz-note">Real CAGR in 2025 dollars. Companies ranked in only one of the two years are listed beneath the chart, so survivors are over-represented.</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+  </div>
+</div>
+
+<div class="tab-panel" id="tab-churn">
+  <div class="hm-shell">
+    <div class="hm-header">
+      <div class="hm-title">Churn and Tenure — Who Falls Off</div>
+      <div class="hm-desc">For each snapshot: how many of the top 25 were new, how many from the previous snapshot dropped out, and the median continuous tenure of the current top 25. Hover for names.</div>
+    </div>
+    <div class="vz-controls" id="churn-ctl"></div>
+    <div class="vz-wrap" id="churn-wrap"></div>
+    <div class="vz-note">Tenure is counted in 5-year snapshots and starts at 1950, so early values are capped. With “Same company” on, a merger inside a family does not count as an exit and entry.</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
   </div>
 </div>
 
@@ -784,6 +900,10 @@ const data={
   ]}
 };
 
+// Normalize: drop placeholder rows (cap<=0) and rank strictly by cap so array index === rank-1.
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+Object.values(data).forEach(d=>{d.rows=d.rows.filter(r=>r.cap>0).sort((a,b)=>b.cap-a.cap);});
+
 const FLAGS={US:"🇺🇸",GB:"🇬🇧",CH:"🇨🇭",DE:"🇩🇪",DK:"🇩🇰",FR:"🇫🇷",JP:"🇯🇵",IE:"🇮🇪",AU:"🇦🇺",BE:"🇧🇪"};
 const YEARS=[1950,1955,1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2020,2025];
 const EARLY=[1950,1955,1960,1965,1970,1975,1980,1985,1990,1995];
@@ -953,7 +1073,8 @@ const CO_FAMILY={
   "Biogen":"biogen","Biogen Idec":"biogen"
 };
 
-// CPI-U multipliers: convert nominal year-Y dollars → 2025 dollars
+// CPI-U multipliers: convert nominal year-Y dollars → 2025 dollars.
+// Approximate annual-average CPI-U (BLS) ratios, 2025 = 1.00; rounded to 2 decimals.
 const CPI_MULT={1950:13.04,1955:11.72,1960:10.61,1965:9.97,1970:8.10,1975:5.84,1980:3.81,1985:2.92,1990:2.40,1995:2.06,2000:1.82,2005:1.61,2010:1.44,2015:1.33,2020:1.21,2025:1.00};
 
 const FAMILY_META={
@@ -1469,7 +1590,7 @@ function buildBubble(){
       document.getElementById('t-yr').textContent=p.year+(data[p.year].note?' · '+data[p.year].note:'');
       document.getElementById('t-co').textContent=(FLAGS[p.country]||'')+' '+p.company;
       document.getElementById('t-cap').textContent=fmtAdj(p.adj)+' (2025$)';
-      document.getElementById('t-rk').textContent='Nominal '+fmt(p.origCap)+' · Ranked #'+p.rank+' of 25';
+      document.getElementById('t-rk').textContent='Nominal '+fmt(p.origCap)+' · Ranked #'+p.rank+' of '+data[p.year].rows.length;
       document.getElementById('t-dr').textContent=p.drugs.join(' · ');
       moveTip(e);tip.classList.add('on');
     });
@@ -1523,7 +1644,7 @@ function renderR(){
     if(row.cap<=0)return;
     const rk=i+1,bc=rk<=3?'rank-'+rk:'rank-other';
     const pct=Math.round(row.cap/mx*100);
-    const pills=row.drugs.map(dr=>`<span class="drug-pill">${dr}</span>`).join('');
+    const pills=row.drugs.map(dr=>`<span class="drug-pill">${esc(dr)}</span>`).join('');
     const fl=FLAGS[row.country]||'';
 
     // Compute delta
@@ -1541,7 +1662,7 @@ function renderR(){
     }
 
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span class="rank ${bc}">${rk}</span></td>${deltaHtml}<td class="co-name">${row.company}</td><td class="muted hide-sm">${fl}${row.country}</td><td class="r"><span class="cap-val">${fmt(row.cap)}</span></td><td class="bar-cell hide-sm"><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></td><td><div class="drug-pills">${pills}</div></td>`;
+    tr.innerHTML=`<td><span class="rank ${bc}">${rk}</span></td>${deltaHtml}<td class="co-name">${esc(row.company)}</td><td class="muted hide-sm">${fl}${row.country}</td><td class="r"><span class="cap-val">${fmt(row.cap)}</span></td><td class="bar-cell hide-sm"><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></td><td><div class="drug-pills">${pills}</div></td>`;
     tr.style.cursor='pointer';
     tr.addEventListener('click',()=>openPanel(row.company));
     tb.appendChild(tr);
@@ -1624,7 +1745,7 @@ function buildHM(){
     const h=document.createElement('div');h.className='hm-year-head';
     const act=hmSortYear===y;
     h.style.cssText=`cursor:pointer;user-select:none;transition:background .12s,color .12s;${act?'background:var(--ink);color:var(--bg);border-bottom-color:var(--accent);':''}`;
-    h.innerHTML=act?`${y}<br><span style="font-size:7px;">&#9660;</span>`:y;
+    h.innerHTML=act?`${y}<br><span style="font-size:7px;">&#9660;</span>`:(y<=1990?`${y}<br><span style="font-size:7px;opacity:.55;">est.</span>`:y);
     h.addEventListener('click',()=>{hmSortYear=(hmSortYear===y?null:y);buildHM();});
     h.addEventListener('mouseenter',()=>{if(!act)h.style.background='rgba(26,24,20,.07)';});
     h.addEventListener('mouseleave',()=>{if(!act)h.style.background='';});
@@ -1633,7 +1754,7 @@ function buildHM(){
 
   sortedCos().forEach(co=>{
     const lbl=document.createElement('div');lbl.className='hm-label';
-    lbl.innerHTML=`<span class="lbl-flag">${FLAGS[co.country]||''}</span><span class="lbl-name">${co.name}</span>`;
+    lbl.innerHTML=`<span class="lbl-flag">${FLAGS[co.country]||''}</span><span class="lbl-name">${esc(co.name)}</span>`;
     lbl.addEventListener('click',()=>openPanel(co.name));
     grid.appendChild(lbl);
     YEARS.forEach(y=>{
@@ -1667,7 +1788,7 @@ function showTip(e,name,year,row,rk){
   document.getElementById('t-yr').textContent=year+(data[year].note?' · '+data[year].note:'');
   document.getElementById('t-co').textContent=name;
   document.getElementById('t-cap').textContent=fmt(row.cap);
-  document.getElementById('t-rk').textContent='Ranked #'+rk+' of 25 that year';
+  document.getElementById('t-rk').textContent='Ranked #'+rk+' of '+data[year].rows.length+' that year';
   document.getElementById('t-dr').textContent=row.drugs.join(' · ');
   moveTip(e);tip.classList.add('on');
 }
@@ -2246,7 +2367,7 @@ function buildTreemapYear(){
       document.getElementById('t-yr').textContent=year+(data[year].note?' · '+data[year].note:'');
       document.getElementById('t-co').textContent=(FLAGS[country]||'')+' '+company;
       document.getElementById('t-cap').textContent=fmtAdj(value)+' (2025$)';
-      document.getElementById('t-rk').textContent='Nominal '+fmt(origCap)+' · Ranked #'+rank+' of 25';
+      document.getElementById('t-rk').textContent='Nominal '+fmt(origCap)+' · Ranked #'+rank+' of '+data[year].rows.length;
       document.getElementById('t-dr').textContent=drugs.join(' · ');
       moveTip(e);tip.classList.add('on');
     });
@@ -2465,6 +2586,359 @@ function buildCountries(){
 
 mkNav(EARLY,'nav-early');mkNav(MODERN,'nav-modern');renderR();buildHM();
 mkUpsetNav(EARLY,'upset-nav-early');mkUpsetNav(MODERN,'upset-nav-modern');
+</script>
+<script>
+// ── New views: Concentration, Slope, Value Flow, TA Stream, Lineage, Growth, Churn ──
+(function(){
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+const sum=a=>a.reduce((s,x)=>s+x,0);
+const mk=(tag,attrs,text)=>{const e=document.createElementNS(NS,tag);for(const k in attrs||{})e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;return e;};
+const svgBox=(W,H)=>mk('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'});
+const INK='#4a4540',MUTE='#8a8078',GRID='#e8e4db',ACC='#b84a2e',GOOD='#2f7d4f',BAD='#b84a2e',BLUE='#2d6fc4';
+const EST_UNTIL=1990; // credits on every tab: pre-1990 figures are estimates
+const TA_ALL=[...TA_KEYS,'other'];
+const TA_NAME=Object.assign(Object.fromEntries(TA_KEYS.map((k,i)=>[k,TA_LABELS[i]])),{other:'Unclassified'});
+const TA_COL={oncology:'#b84a2e','cardio-metabolic':'#2d6fc4',neuroscience:'#7c3aed',immunology:'#0d9488','infectious-disease':'#c49a2d',vaccines:'#84cc16',respiratory:'#0891b2','rare-disease':'#db2777',other:'#c9c3b8'};
+let famOn=true; // treat mergers/renames within a corporate family as one company
+
+const taKey=d=>d.replace(/\s*\(.*?\)/g,'').trim();
+// Split a company's cap evenly across its listed drugs, then across each drug's TAs. Illustrative, not revenue.
+function taSplit(r){
+  const out={};
+  r.drugs.forEach(d=>{const tas=DRUG_TA[taKey(d)]||['other'];tas.forEach(t=>{out[t]=(out[t]||0)+r.cap/r.drugs.length/tas.length;});});
+  return out;
+}
+const idf=n=>famOn?(CO_FAMILY[n]||n):n;
+
+function tipAt(e,yr,co,cap,rk,dr){
+  $('t-yr').textContent=yr;$('t-co').textContent=co;$('t-cap').textContent=cap;$('t-rk').textContent=rk||'';$('t-dr').textContent=dr||'';
+  moveTip(e);tip.classList.add('on');
+}
+function hov(el,fn){el.addEventListener('mouseenter',fn);el.addEventListener('mousemove',moveTip);el.addEventListener('mouseleave',hideTip);}
+
+function seg(label,opts,cur,on){
+  const w=document.createElement('div');w.className='vz-ctl';
+  const l=document.createElement('span');l.textContent=label;w.appendChild(l);
+  const s=document.createElement('span');s.className='vz-seg';
+  opts.forEach(([v,t])=>{const b=document.createElement('button');b.textContent=t;if(v===cur)b.className='on';b.onclick=()=>on(v);s.appendChild(b);});
+  w.appendChild(s);return w;
+}
+function sel(label,vals,cur,on){
+  const w=document.createElement('label');w.className='vz-ctl';
+  const l=document.createElement('span');l.textContent=label;w.appendChild(l);
+  const s=document.createElement('select');
+  vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;if(v===cur)o.selected=true;s.appendChild(o);});
+  s.onchange=()=>on(+s.value);w.appendChild(s);return w;
+}
+const famCtl=on=>seg('Mergers',[[true,'Same company'],[false,'Separate']],famOn,v=>{famOn=v;on();});
+function mount(id,controls,svg){
+  const c=$(id+'-ctl'),w=$(id+'-wrap');c.innerHTML='';w.innerHTML='';
+  controls.forEach(x=>c.appendChild(x));w.appendChild(svg);
+}
+function estBand(svg,x0,x1,y0,h){
+  svg.appendChild(mk('rect',{x:x0,y:y0,width:x1-x0,height:h,fill:'rgba(184,74,46,.06)'}));
+  svg.appendChild(mk('text',{x:x0+6,y:y0+12,'font-size':9,fill:MUTE,'letter-spacing':'.08em'},'ESTIMATED'));
+}
+function pairUp(yA,yB){
+  const gA=new Map(),gB=new Map();
+  data[yA].rows.forEach((r,i)=>{const k=idf(r.company);if(!gA.has(k))gA.set(k,[]);gA.get(k).push({r,rank:i+1});});
+  data[yB].rows.forEach((r,i)=>{const k=idf(r.company);if(!gB.has(k))gB.set(k,[]);gB.get(k).push({r,rank:i+1});});
+  const pairs=[],onlyA=[],onlyB=[];
+  gA.forEach((a,k)=>{const b=gB.get(k)||[];a.forEach((x,i)=>b[i]?pairs.push([x,b[i]]):onlyA.push(x));});
+  gB.forEach((b,k)=>{const a=gA.get(k)||[];b.forEach((x,i)=>{if(!a[i])onlyB.push(x);});});
+  return{pairs,onlyA,onlyB};
+}
+const real=(r,y)=>r.cap*CPI_MULT[y];
+
+// ── 1. Concentration ─────────────────────────────────────────────────────────
+function buildConc(){
+  const stats=YEARS.map(y=>{
+    const caps=data[y].rows.map(r=>r.cap),T=sum(caps);
+    const hhi=sum(caps.map(c=>Math.pow(c/T*100,2)));
+    return{y,T,top1:caps[0]/T,top5:sum(caps.slice(0,5))/T,top10:sum(caps.slice(0,10))/T,hhi,effN:10000/hhi,leader:data[y].rows[0].company};
+  });
+  const W=980,H=620,m={l:56,r:90,t:20},pw=W-m.l-m.r,step=pw/(YEARS.length-1);
+  const x=i=>m.l+i*step;
+  const svg=svgBox(W,H);
+  const A={top:m.t,h:300},B={top:m.t+300+70,h:170};
+  const yA=v=>A.top+(1-v)*A.h;
+  const maxH=Math.max(...stats.map(s=>s.hhi))*1.1,yB=v=>B.top+(1-v/maxH)*B.h;
+  const eIdx=YEARS.filter(y=>y<=EST_UNTIL).length-1;
+  [A,B].forEach(p=>estBand(svg,m.l,x(eIdx)+step/2,p.top,p.h));
+  [0,.25,.5,.75,1].forEach(v=>{
+    svg.appendChild(mk('line',{x1:m.l,x2:m.l+pw,y1:yA(v),y2:yA(v),stroke:GRID}));
+    svg.appendChild(mk('text',{x:m.l-8,y:yA(v)+4,'text-anchor':'end','font-size':10,fill:MUTE},Math.round(v*100)+'%'));
+  });
+  [0,250,500,750].filter(v=>v<=maxH).forEach(v=>{
+    svg.appendChild(mk('line',{x1:m.l,x2:m.l+pw,y1:yB(v),y2:yB(v),stroke:GRID}));
+    svg.appendChild(mk('text',{x:m.l-8,y:yB(v)+4,'text-anchor':'end','font-size':10,fill:MUTE},v));
+  });
+  svg.appendChild(mk('line',{x1:m.l,x2:m.l+pw,y1:yB(400),y2:yB(400),stroke:MUTE,'stroke-dasharray':'4 4'}));
+  svg.appendChild(mk('text',{x:m.l+pw+6,y:yB(400)+4,'font-size':9,fill:MUTE},'25 equal firms'));
+  svg.appendChild(mk('text',{x:m.l,y:A.top-6,'font-size':10,fill:INK,'letter-spacing':'.06em'},'SHARE OF TOP-25 COMBINED MARKET CAP'));
+  svg.appendChild(mk('text',{x:m.l,y:B.top-8,'font-size':10,fill:INK,'letter-spacing':'.06em'},'HERFINDAHL INDEX (HHI) WITHIN THE TOP 25'));
+  const line=(key,color,label,yf,val)=>{
+    svg.appendChild(mk('path',{d:stats.map((s,i)=>(i?'L':'M')+x(i)+','+yf(val(s))).join(''),fill:'none',stroke:color,'stroke-width':2.2}));
+    stats.forEach((s,i)=>svg.appendChild(mk('circle',{cx:x(i),cy:yf(val(s)),r:3,fill:color})));
+    const last=stats[stats.length-1];
+    svg.appendChild(mk('text',{x:x(stats.length-1)+10,y:yf(val(last))+4,'font-size':11,fill:color,'font-weight':600},label));
+  };
+  line('top10','#4a4540','Top 10',yA,s=>s.top10);
+  line('top5',BLUE,'Top 5',yA,s=>s.top5);
+  line('top1',ACC,'Top 1',yA,s=>s.top1);
+  line('hhi','#7c3aed','HHI',yB,s=>s.hhi);
+  YEARS.forEach((y,i)=>svg.appendChild(mk('text',{x:x(i),y:B.top+B.h+18,'text-anchor':'middle','font-size':10,fill:INK},y)));
+  stats.forEach((s,i)=>{
+    const r=mk('rect',{x:x(i)-step/2,y:A.top,width:step,height:B.top+B.h-A.top,fill:'transparent'});
+    hov(r,e=>tipAt(e,s.y,'Leader: '+s.leader+' ('+Math.round(s.top1*100)+'%)','Top 5: '+Math.round(s.top5*100)+'% · Top 10: '+Math.round(s.top10*100)+'%','HHI '+Math.round(s.hhi)+' ≈ '+s.effN.toFixed(1)+' equal-size firms','Top-25 combined: '+fmt(s.T)));
+    svg.appendChild(r);
+  });
+  mount('conc',[],svg);
+}
+
+// ── 2. Slope graph ───────────────────────────────────────────────────────────
+let slopeA=2000,slopeB=2025;
+function buildSlope(){
+  const {pairs,onlyA,onlyB}=pairUp(slopeA,slopeB);
+  const nA=data[slopeA].rows.length,nB=data[slopeB].rows.length,n=Math.max(nA,nB);
+  const W=980,rowH=24,top=46,H=top+n*rowH+20,xL=330,xR=650;
+  const y=rank=>top+(rank-1)*rowH+rowH/2;
+  const svg=svgBox(W,H);
+  svg.appendChild(mk('text',{x:xL-8,y:22,'text-anchor':'end','font-size':14,fill:INK,'font-weight':600},slopeA));
+  svg.appendChild(mk('text',{x:xR+8,y:22,'font-size':14,fill:INK,'font-weight':600},slopeB));
+  const groups=[];
+  const label=(side,item,col)=>{
+    const {r,rank}=item,left=side==='L',yy=y(rank)+4;
+    const t1=mk('text',{x:left?xL-58:xR+58,y:yy,'text-anchor':left?'end':'start','font-size':11,fill:col||INK},rank+'. '+r.company);
+    const t2=mk('text',{x:left?xL-8:xR+8,y:yy,'text-anchor':left?'end':'start','font-size':10,fill:MUTE},fmt(r.cap));
+    return[t1,t2];
+  };
+  pairs.forEach(([a,b])=>{
+    const d=b.rank-a.rank,col=d<0?GOOD:d>0?BAD:'#8a8078';
+    const ln=mk('line',{x1:xL,y1:y(a.rank),x2:xR,y2:y(b.rank),stroke:col,'stroke-width':1.8,'stroke-opacity':.7});
+    const g=mk('g',{style:'cursor:pointer'});
+    g.appendChild(ln);label('L',a).concat(label('R',b)).forEach(t=>g.appendChild(t));
+    g.appendChild(mk('circle',{cx:xL,cy:y(a.rank),r:3,fill:col}));g.appendChild(mk('circle',{cx:xR,cy:y(b.rank),r:3,fill:col}));
+    const hit=mk('line',{x1:xL,y1:y(a.rank),x2:xR,y2:y(b.rank),stroke:'transparent','stroke-width':12});g.appendChild(hit);
+    hov(g,e=>{
+      groups.forEach(o=>o.style.opacity=o===g?1:.15);
+      tipAt(e,slopeA+' → '+slopeB,b.r.company,fmt(a.r.cap)+' → '+fmt(b.r.cap),'Rank #'+a.rank+' → #'+b.rank+(d<0?' (▲'+(-d)+')':d>0?' (▼'+d+')':' (=)'));
+    });
+    g.addEventListener('mouseleave',()=>groups.forEach(o=>o.style.opacity=1));
+    g.addEventListener('click',()=>openPanel(b.r.company));
+    groups.push(g);svg.appendChild(g);
+  });
+  onlyA.forEach(it=>{const g=mk('g');label('L',it,MUTE).forEach(t=>g.appendChild(t));groups.push(g);svg.appendChild(g);});
+  onlyB.forEach(it=>{const g=mk('g');label('R',it,MUTE).forEach(t=>g.appendChild(t));groups.push(g);svg.appendChild(g);});
+  const ctl=[sel('From',YEARS,slopeA,v=>{slopeA=v;buildSlope();}),sel('To',YEARS,slopeB,v=>{slopeB=v;buildSlope();}),famCtl(buildSlope)];
+  mount('slope',ctl,svg);
+}
+
+// ── 3. Value flow (company → therapeutic area) ──────────────────────────────
+let flowYear=2025;
+function buildFlow(){
+  const rows=data[flowYear].rows,total=sum(rows.map(r=>r.cap));
+  const W=1000,H=700,top=30,bot=20,xL=250,nodeW=14,xR=W-290,gapL=4;
+  const k=(H-top-bot-(rows.length-1)*gapL)/total;
+  const links=[];
+  rows.forEach((r,ci)=>{const s=taSplit(r),per={};
+    r.drugs.forEach(d=>{const key=taKey(d);(DRUG_TA[key]||['other']).forEach(t=>{(per[t]=per[t]||[]).push(key);});});
+    TA_ALL.forEach(t=>{if(s[t])links.push({ci,ta:t,w:s[t],drugs:per[t],co:r});});});
+  const taTot={};TA_ALL.forEach(t=>taTot[t]=0);links.forEach(l=>taTot[l.ta]+=l.w);
+  const used=TA_ALL.filter(t=>taTot[t]>0);
+  const gapR=used.length>1?((H-top-bot)-k*total)/(used.length-1):0;
+  const svg=svgBox(W,H);
+  let yy=top;const coY=[];
+  rows.forEach(r=>{coY.push(yy);yy+=r.cap*k+gapL;});
+  const taY={};yy=top;used.forEach(t=>{taY[t]=yy;yy+=taTot[t]*k+gapR;});
+  const curL=coY.slice(),curR={};used.forEach(t=>curR[t]=taY[t]);
+  const lg=mk('g');svg.appendChild(lg);
+  links.forEach(l=>{l.yl=curL[l.ci];curL[l.ci]+=l.w*k;});
+  used.forEach(t=>links.filter(l=>l.ta===t).forEach(l=>{l.yr=curR[t];curR[t]+=l.w*k;}));
+  const x0=xL+nodeW,xm=(x0+xR)/2,paths=[];
+  links.forEach(l=>{
+    const h=l.w*k,p=mk('path',{d:`M${x0},${l.yl} C${xm},${l.yl} ${xm},${l.yr} ${xR},${l.yr} L${xR},${l.yr+h} C${xm},${l.yr+h} ${xm},${l.yl+h} ${x0},${l.yl+h} Z`,fill:TA_COL[l.ta],'fill-opacity':.45});
+    hov(p,e=>{paths.forEach(o=>o.setAttribute('fill-opacity',o===p?.85:.15));
+      tipAt(e,flowYear,l.co.company+' → '+TA_NAME[l.ta],fmt(l.w)+' of '+fmt(l.co.cap),Math.round(l.w/l.co.cap*100)+'% of its cap',l.drugs.join(' · '));});
+    p.addEventListener('mouseleave',()=>paths.forEach(o=>o.setAttribute('fill-opacity',.45)));
+    paths.push(p);lg.appendChild(p);
+  });
+  let lastLbl=-99;
+  rows.forEach((r,i)=>{
+    svg.appendChild(mk('rect',{x:xL,y:coY[i],width:nodeW,height:Math.max(r.cap*k,1),fill:INK}));
+    const ly=coY[i]+r.cap*k/2+4;
+    if(ly-lastLbl<12)return;
+    lastLbl=ly;
+    svg.appendChild(mk('text',{x:xL-8,y:ly,'text-anchor':'end','font-size':11,fill:INK,style:'cursor:pointer'},r.company+'  '+fmt(r.cap))).addEventListener('click',()=>openPanel(r.company));
+  });
+  used.forEach(t=>{
+    svg.appendChild(mk('rect',{x:xR,y:taY[t],width:nodeW,height:taTot[t]*k,fill:TA_COL[t]}));
+    svg.appendChild(mk('text',{x:xR+nodeW+8,y:taY[t]+taTot[t]*k/2+4,'font-size':12,fill:INK,'font-weight':600},TA_NAME[t]+'  '+Math.round(taTot[t]/total*100)+'%'));
+  });
+  mount('flow',[sel('Year',YEARS,flowYear,v=>{flowYear=v;buildFlow();})],svg);
+}
+
+// ── 4. Therapeutic-area stream ──────────────────────────────────────────────
+let streamMode='stream',streamReal=true;
+function buildStream(){
+  const ser=YEARS.map(y=>{const t={};TA_ALL.forEach(k=>t[k]=0);
+    data[y].rows.forEach(r=>{const s=taSplit(r);for(const k in s)t[k]+=s[k]*(streamReal?CPI_MULT[y]:1);});
+    return{y,t,T:sum(TA_ALL.map(k=>t[k]))};});
+  const W=980,H=520,m={l:60,r:20,t:20,b:36},pw=W-m.l-m.r,ph=H-m.t-m.b,step=pw/(YEARS.length-1);
+  const x=i=>m.l+i*step,maxT=Math.max(...ser.map(s=>s.T));
+  const lo={},hi={};TA_ALL.forEach(k=>{lo[k]=[];hi[k]=[];});
+  ser.forEach((s,i)=>{
+    const sc=streamMode==='pct'?1/s.T:1;let base=streamMode==='stream'?-s.T/2:0;
+    TA_ALL.forEach(k=>{lo[k][i]=base;base+=s.t[k]*sc;hi[k][i]=base;});
+  });
+  const dom=streamMode==='pct'?[0,1]:streamMode==='stream'?[-maxT/2,maxT/2]:[0,maxT];
+  const y=v=>m.t+(1-(v-dom[0])/(dom[1]-dom[0]))*ph;
+  const svg=svgBox(W,H);
+  const eIdx=YEARS.filter(v=>v<=EST_UNTIL).length-1;
+  estBand(svg,m.l,x(eIdx)+step/2,m.t,ph);
+  if(streamMode!=='stream'){
+    const ticks=streamMode==='pct'?[0,.25,.5,.75,1]:(()=>{const s=Math.pow(10,Math.floor(Math.log10(maxT/3)));const u=[1,2,5].map(f=>f*s).find(v=>maxT/v<=6)||s*10;const a=[];for(let v=0;v<=maxT;v+=u)a.push(v);return a;})();
+    ticks.forEach(v=>{svg.appendChild(mk('line',{x1:m.l,x2:m.l+pw,y1:y(v),y2:y(v),stroke:GRID}));
+      svg.appendChild(mk('text',{x:m.l-8,y:y(v)+4,'text-anchor':'end','font-size':10,fill:MUTE},streamMode==='pct'?Math.round(v*100)+'%':'$'+Math.round(v)+'B'));});
+  }
+  const curve=(pts)=>pts.map((p,i)=>{if(!i)return`M${p[0]},${p[1]}`;const q=pts[i-1],mx=(q[0]+p[0])/2;return` C${mx},${q[1]} ${mx},${p[1]} ${p[0]},${p[1]}`;}).join('');
+  TA_ALL.slice().forEach(k=>{
+    const up=ser.map((s,i)=>[x(i),y(hi[k][i])]),dn=ser.map((s,i)=>[x(i),y(lo[k][i])]).reverse();
+    svg.appendChild(mk('path',{d:curve(up)+' L'+dn[0][0]+','+dn[0][1]+curve(dn).replace(/^M[^ C]*/,'')+' Z',fill:TA_COL[k],'fill-opacity':.85,stroke:'#faf8f3','stroke-width':.6}));
+  });
+  if(streamMode==='stream'){
+    const bar=[10,20,50,100,200,500,1000,2000].filter(v=>v<=maxT/3).pop()||10;
+    const bx=m.l+pw-10,by=m.t+ph-10;
+    svg.appendChild(mk('line',{x1:bx,x2:bx,y1:by,y2:by-bar/(dom[1]-dom[0])*ph,stroke:INK,'stroke-width':2}));
+    svg.appendChild(mk('text',{x:bx-6,y:by-bar/(dom[1]-dom[0])*ph/2+4,'text-anchor':'end','font-size':10,fill:INK},'$'+bar+'B'));
+  }
+  YEARS.forEach((v,i)=>svg.appendChild(mk('text',{x:x(i),y:H-12,'text-anchor':'middle','font-size':10,fill:INK},v)));
+  ser.forEach((s,i)=>{
+    const r=mk('rect',{x:x(i)-step/2,y:m.t,width:step,height:ph,fill:'transparent'});
+    hov(r,e=>{const items=TA_ALL.filter(k=>s.t[k]>0).sort((a,b)=>s.t[b]-s.t[a]);
+      tipAt(e,s.y+(streamReal?' · 2025 dollars':' · nominal'),'Top-25 total '+fmtAdj(s.T),items[0]?TA_NAME[items[0]]+' leads ('+Math.round(s.t[items[0]]/s.T*100)+'%)':'',
+        'Unclassified: '+Math.round(s.t.other/s.T*100)+'%',items.map(k=>TA_NAME[k]+' '+fmtAdj(s.t[k])).join(' · '));});
+    svg.appendChild(r);
+  });
+  const ctl=[seg('Layout',[['stream','Stream'],['stacked','Stacked'],['pct','100%']],streamMode,v=>{streamMode=v;buildStream();}),
+    seg('Dollars',[[true,'2025 $'],[false,'Nominal']],streamReal,v=>{streamReal=v;buildStream();})];
+  mount('stream',ctl,svg);
+  const lgd=document.createElement('div');lgd.className='ctry-legend';lgd.style.marginTop='1rem';
+  TA_ALL.forEach(k=>{const it=document.createElement('div');it.className='ctry-leg-item';it.innerHTML=`<span class="ctry-leg-swatch" style="background:${TA_COL[k]}"></span>${TA_NAME[k]}`;lgd.appendChild(it);});
+  $('stream-wrap').appendChild(lgd);
+}
+
+// ── 5. Lineage atlas ─────────────────────────────────────────────────────────
+let lineageBuilt=false;
+async function buildLineage(){
+  if(lineageBuilt)return;lineageBuilt=true;
+  const grid=$('lineage-grid');grid.innerHTML='';
+  const keys=Object.keys(FAMILY_META).filter(k=>LINEAGE[k]);
+  for(const key of keys){
+    const meta=FAMILY_META[key],card=document.createElement('div');card.className='lv-card';
+    const vals=YEARS.map(y=>sum(data[y].rows.filter(r=>CO_FAMILY[r.company]===key).map(r=>real(r,y))));
+    const peak=Math.max(...vals),pk=YEARS[vals.indexOf(peak)];
+    card.innerHTML=`<h3><span class="lv-dot" style="background:${meta.color}"></span>${esc(meta.label)}</h3><div class="lv-chart"></div><div class="lv-spark"></div><div class="lv-cap">Combined top-25 cap of family members, 2025 $ · peak ${fmtAdj(peak)} in ${pk}</div>`;
+    grid.appendChild(card);
+    const sp=svgBox(320,64);
+    vals.forEach((v,i)=>{const h=peak?v/peak*46:0;
+      const b=mk('rect',{x:4+i*19.5,y:50-h,width:15,height:Math.max(h,v>0?1:0),fill:meta.color,'fill-opacity':YEARS[i]<=EST_UNTIL?.45:.9});
+      hov(b,e=>tipAt(e,YEARS[i],meta.label,v?fmtAdj(v):'not ranked','2025 dollars'));sp.appendChild(b);
+      if(i%3===0)sp.appendChild(mk('text',{x:4+i*19.5+7.5,y:62,'text-anchor':'middle','font-size':8,fill:MUTE},YEARS[i]));});
+    card.querySelector('.lv-spark').appendChild(sp);
+    try{const {svg}=await mermaid.render('lv-svg-'+key,LINEAGE[key].chart);card.querySelector('.lv-chart').innerHTML=svg;}
+    catch(e){card.querySelector('.lv-chart').textContent='Diagram unavailable (mermaid failed to load).';}
+  }
+}
+
+// ── 6. Growth dumbbell ───────────────────────────────────────────────────────
+let growA=2010,growB=2025;
+function buildGrowth(){
+  if(growA>=growB){const t=growA;growA=growB;growB=t;}
+  if(growA===growB)growA=YEARS[Math.max(0,YEARS.indexOf(growB)-1)];
+  const {pairs,onlyA,onlyB}=pairUp(growA,growB),span=growB-growA;
+  const rows=pairs.map(([a,b])=>{const va=real(a.r,growA),vb=real(b.r,growB);return{a,b,va,vb,cagr:Math.pow(vb/va,1/span)-1};}).sort((p,q)=>q.cagr-p.cagr);
+  const W=980,rowH=26,top=40,m={l:230,r:120},H=top+rows.length*rowH+60,pw=W-m.l-m.r;
+  const svg=svgBox(W,H);
+  const vals=rows.flatMap(r=>[r.va,r.vb]),lo=Math.log10(Math.min(...vals)*.8),hi=Math.log10(Math.max(...vals)*1.25);
+  const x=v=>m.l+(Math.log10(v)-lo)/(hi-lo)*pw;
+  [1,3,10,30,100,300,1000,3000].filter(v=>Math.log10(v)>=lo&&Math.log10(v)<=hi).forEach(v=>{
+    svg.appendChild(mk('line',{x1:x(v),x2:x(v),y1:top-8,y2:top+rows.length*rowH,stroke:GRID}));
+    svg.appendChild(mk('text',{x:x(v),y:top-14,'text-anchor':'middle','font-size':10,fill:MUTE},'$'+v+'B'));});
+  svg.appendChild(mk('text',{x:W-m.r+20,y:top-14,'font-size':10,fill:MUTE},'REAL CAGR'));
+  rows.forEach((r,i)=>{
+    const yy=top+i*rowH+rowH/2,col=r.cagr>=0?GOOD:BAD,g=mk('g',{style:'cursor:pointer'});
+    g.appendChild(mk('line',{x1:x(r.va),x2:x(r.vb),y1:yy,y2:yy,stroke:col,'stroke-width':3,'stroke-opacity':.5}));
+    g.appendChild(mk('circle',{cx:x(r.va),cy:yy,r:5,fill:'#faf8f3',stroke:INK,'stroke-width':1.5}));
+    g.appendChild(mk('circle',{cx:x(r.vb),cy:yy,r:5,fill:col}));
+    g.appendChild(mk('text',{x:m.l-14,y:yy+4,'text-anchor':'end','font-size':11,fill:INK},r.b.r.company));
+    g.appendChild(mk('text',{x:W-m.r+20,y:yy+4,'font-size':11,fill:col,'font-weight':600},(r.cagr>=0?'+':'')+(r.cagr*100).toFixed(1)+'%/yr'));
+    g.appendChild(mk('rect',{x:0,y:yy-rowH/2,width:W,height:rowH,fill:'transparent'}));
+    hov(g,e=>tipAt(e,growA+' → '+growB,r.b.r.company,fmtAdj(r.va)+' → '+fmtAdj(r.vb),'Real growth '+(r.cagr*100).toFixed(1)+'%/yr · rank #'+r.a.rank+' → #'+r.b.rank,'2025 dollars'));
+    g.addEventListener('click',()=>openPanel(r.b.r.company));
+    svg.appendChild(g);
+  });
+  const note=(txt,yy)=>svg.appendChild(mk('text',{x:m.l-14,y:yy,'font-size':10,fill:MUTE},txt));
+  note('Only in '+growA+' (not '+growB+'): '+(onlyA.map(i=>i.r.company).join(', ')||'none'),H-30);
+  note('Only in '+growB+' (not '+growA+'): '+(onlyB.map(i=>i.r.company).join(', ')||'none'),H-12);
+  mount('growth',[sel('From',YEARS,growA,v=>{growA=v;buildGrowth();}),sel('To',YEARS,growB,v=>{growB=v;buildGrowth();}),famCtl(buildGrowth)],svg);
+}
+
+// ── 7. Churn & tenure ────────────────────────────────────────────────────────
+function buildChurn(){
+  const sets=YEARS.map(y=>new Map(data[y].rows.map(r=>[idf(r.company),r.company])));
+  const stats=YEARS.map((y,i)=>{
+    const cur=sets[i],prev=i?sets[i-1]:null;
+    const fresh=prev?[...cur.keys()].filter(k=>!prev.has(k)):[];
+    const gone=prev?[...prev.keys()].filter(k=>!cur.has(k)):[];
+    const ten=[...cur.keys()].map(k=>{let n=0;for(let j=i;j>=0&&sets[j].has(k);j--)n++;return n*5;}).sort((a,b)=>a-b);
+    const med=(ten[Math.floor((ten.length-1)/2)]+ten[Math.ceil((ten.length-1)/2)])/2;
+    return{y,n:cur.size,fresh:fresh.map(k=>cur.get(k)),gone:gone.map(k=>prev.get(k)),med};
+  }).slice(1);
+  const W=980,H=600,m={l:56,r:20,t:24},pw=W-m.l-m.r,step=pw/stats.length,bw=step*.6;
+  const maxN=Math.max(...stats.map(s=>s.n)),maxG=Math.max(...stats.map(s=>s.gone.length),1);
+  const A={top:m.t,h:300},B={top:m.t+300+70,h:170};
+  const unit=A.h/(maxN+maxG),base=A.top+maxN*unit;
+  const svg=svgBox(W,H);
+  const x=i=>m.l+i*step+(step-bw)/2;
+  const eN=stats.filter(s=>s.y<=EST_UNTIL).length;
+  [A,B].forEach(p=>estBand(svg,m.l,m.l+eN*step,p.top,p.h));
+  svg.appendChild(mk('text',{x:m.l,y:A.top-8,'font-size':10,fill:INK,'letter-spacing':'.06em'},'RETAINED + NEW (ABOVE) · DROPPED OUT (BELOW)'));
+  svg.appendChild(mk('line',{x1:m.l,x2:m.l+pw,y1:base,y2:base,stroke:'#c0bab0'}));
+  stats.forEach((s,i)=>{
+    const keep=s.n-s.fresh.length;
+    svg.appendChild(mk('rect',{x:x(i),y:base-keep*unit,width:bw,height:keep*unit,fill:'#4a4540','fill-opacity':.8}));
+    svg.appendChild(mk('rect',{x:x(i),y:base-s.n*unit,width:bw,height:s.fresh.length*unit,fill:ACC}));
+    svg.appendChild(mk('rect',{x:x(i),y:base,width:bw,height:s.gone.length*unit,fill:'#7a8a96'}));
+    if(s.fresh.length)svg.appendChild(mk('text',{x:x(i)+bw/2,y:base-s.n*unit-4,'text-anchor':'middle','font-size':10,fill:ACC},'+'+s.fresh.length));
+    if(s.gone.length)svg.appendChild(mk('text',{x:x(i)+bw/2,y:base+s.gone.length*unit+12,'text-anchor':'middle','font-size':10,fill:'#5d6d79'},'−'+s.gone.length));
+  });
+  const mm=Math.max(...stats.map(s=>s.med),5),yb=v=>B.top+(1-v/mm/1.15)*B.h;
+  svg.appendChild(mk('text',{x:m.l,y:B.top-8,'font-size':10,fill:INK,'letter-spacing':'.06em'},'MEDIAN TENURE OF THE CURRENT TOP 25 (YEARS, CAPPED BY 1950 START)'));
+  [0,10,20,30,40,50,60,70].filter(v=>v<=mm*1.15).forEach(v=>{
+    svg.appendChild(mk('line',{x1:m.l,x2:m.l+pw,y1:yb(v),y2:yb(v),stroke:GRID}));
+    svg.appendChild(mk('text',{x:m.l-8,y:yb(v)+4,'text-anchor':'end','font-size':10,fill:MUTE},v));});
+  svg.appendChild(mk('path',{d:stats.map((s,i)=>(i?'L':'M')+(x(i)+bw/2)+','+yb(s.med)).join(''),fill:'none',stroke:'#7c3aed','stroke-width':2.2}));
+  stats.forEach((s,i)=>{
+    svg.appendChild(mk('circle',{cx:x(i)+bw/2,cy:yb(s.med),r:3,fill:'#7c3aed'}));
+    svg.appendChild(mk('text',{x:x(i)+bw/2,y:B.top+B.h+18,'text-anchor':'middle','font-size':10,fill:INK},s.y));
+    const r=mk('rect',{x:m.l+i*step,y:A.top,width:step,height:B.top+B.h-A.top,fill:'transparent'});
+    hov(r,e=>tipAt(e,s.y,s.fresh.length+' new · '+s.gone.length+' dropped','Median tenure '+s.med+' yrs',(s.n-s.fresh.length)+' of '+s.n+' carried over from '+YEARS[i],'New: '+(s.fresh.join(', ')||'—')+'\nDropped: '+(s.gone.join(', ')||'—')));
+    svg.appendChild(r);
+  });
+  mount('churn',[famCtl(buildChurn)],svg);
+  const lgd=document.createElement('div');lgd.className='ctry-legend';lgd.style.marginTop='1rem';
+  [['#4a4540','Carried over'],[ACC,'New to top 25'],['#7a8a96','Dropped out']].forEach(([c,t])=>{const it=document.createElement('div');it.className='ctry-leg-item';it.innerHTML=`<span class="ctry-leg-swatch" style="background:${c}"></span>${t}`;lgd.appendChild(it);});
+  $('churn-wrap').appendChild(lgd);
+}
+
+const builders={conc:buildConc,slope:buildSlope,flow:buildFlow,stream:buildStream,lineage:buildLineage,growth:buildGrowth,churn:buildChurn};
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+  const fn=builders[b.dataset.tab];
+  if(fn){$('search-bar').style.display='none';fn();}
+}));
+})();
 </script>
 </body>
 </html>
