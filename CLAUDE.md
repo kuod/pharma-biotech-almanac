@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a single-file static web application (`index.html`) — no build step, no dependencies, no package manager. Open `index.html` directly in a browser to run it.
+This is a single-file static web application (`index.html`) — no build step, no package manager. The only runtime dependency is mermaid (pinned, loaded from jsDelivr with SRI) for lineage diagrams; if it fails to load, everything else still works. Open `index.html` directly in a browser to run it.
 
 ## Architecture
 
@@ -12,12 +12,10 @@ Everything lives in `index.html` in three contiguous sections:
 
 1. **`<style>`** — All CSS, inline, using CSS custom properties (`:root` vars like `--bg`, `--ink`, `--accent`) for theming. Responsive breakpoint at 640px.
 
-2. **HTML body** — Two tab panels:
-   - `#tab-rankings`: Year-navigation buttons + sortable table of top-25 companies
-   - `#tab-heatmap`: Grid heatmap of all companies across all 16 five-year snapshots
+2. **HTML body** — 15 tab panels (`#tab-rankings`, `#tab-bump`, `#tab-heatmap`, `#tab-countries`, `#tab-bubble`, treemaps, `#tab-upset`, and the views listed below), driven by `.tab-bar` buttons with `data-tab`
 
 3. **`<script>`** — All JS, inline, structured as:
-   - **`data` object** (~600 lines): The entire dataset — keyed by year (1950–2025 in 5-year steps), each year has `note`, `footnote`, and `rows[]` (company name, country code, market cap in $B, key drugs array).
+   - **`data` object** (~800 lines): The entire dataset — keyed by year (1950–2025 in 5-year steps), each year has `note`, `footnote`, and `rows[]` (company name, country code, market cap in $B, key drugs array).
    - **`FLAGS`** map: Country code → emoji flag
    - **`YEARS`/`EARLY`/`MODERN`** arrays: The 16 snapshot years split into pre/post-2000 groups
    - **`fmt(c)` / `fmtS(c)`**: Market cap formatters (handles M/B scale)
@@ -33,7 +31,7 @@ Each row in `data[year].rows`:
 ```js
 { company: "Pfizer", country: "US", cap: 135.0, drugs: ["Paxlovid", ...] }
 ```
-- `cap` is in **$B** for values ≥ 1, and in **$B** (fractional) for pre-1990 values (e.g. `0.40` = $400M)
+- `cap` is always in **$B**; pre-1990 values are fractional (e.g. `0.40` = $400M)
 - `cap: 0` or negative means the company is excluded from rendering that year
 - Pre-1990 data is estimated; post-1990 is sourced from reported figures
 
@@ -47,4 +45,4 @@ Concentration, Slope, Value Flow, TA Stream, Lineage, Growth and Churn tabs live
 
 ## No Build / Data Check
 
-There is no build system or test suite. Validate changes by opening `index.html` in a browser, and run `node tools/check-data.js` (add `--verbose` to list unmapped drugs) to sanity-check the dataset: duplicates, flag coverage, missing drugs, unsorted source rows.
+There is no build system; CI (`.github/workflows/check.yml`) runs `node tools/check-scripts.js` and `node tools/check-data.js`. Validate changes by opening `index.html` in a browser, and run `node tools/check-data.js` (add `--verbose` to list unmapped drugs) to sanity-check the dataset: duplicates, flag coverage, missing drugs, unsorted source rows.

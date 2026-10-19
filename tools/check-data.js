@@ -31,7 +31,8 @@ for (const [y, d] of Object.entries(data)) {
   if (rows.some(r => r.cap <= 0)) warn(`${y}: placeholder rows with cap<=0 (dropped at load)`);
 }
 for (const co of Object.keys(CO_FAMILY)) if (!seenCo.has(co)) warn(`CO_FAMILY entry never ranked: ${co}`);
-const unmapped = [...seenCo].filter(x => x.startsWith('drug:')).map(x => x.slice(5));
-if (unmapped.length) warn(`${unmapped.length} drugs without a DRUG_TA mapping` + (process.argv.includes('--verbose') ? ': ' + unmapped.join(', ') : ' (--verbose to list)'));
+// Unmapped drugs fall into the "other" bucket in Value Flow / TA Stream / TA matrix; ambiguous ones are left unmapped on purpose.
+const unmapped = [...new Set([...seenCo].filter(x => x.startsWith('drug:')).map(x => x.slice(5).replace(/\s*\(.*?\)/g, '').trim()))].sort();
+if (unmapped.length) warn(`${unmapped.length} distinct drugs without a DRUG_TA mapping (counted under "other"): ` + unmapped.join(', '));
 console.log(`${errors} error(s), ${warns} warning(s)`);
 process.exit(errors ? 1 : 0);

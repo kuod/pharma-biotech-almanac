@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js" integrity="sha384-R63zfMfSwJF4xCR11wXii+QUsbiBIdiDzDbtxia72oGWfkT7WHJfmD/I/eeHPJyT" crossorigin="anonymous"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -463,7 +463,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
 </div>
 
 <script>
-mermaid.initialize({startOnLoad:false,theme:'neutral',flowchart:{curve:'basis',htmlLabels:true}});
+if(typeof mermaid!=='undefined')mermaid.initialize({startOnLoad:false,theme:'neutral',flowchart:{curve:'basis',htmlLabels:true}});
 
 const data={
   1950:{note:"estimated",footnote:"Industry dominated by US companies emerging from WWII antibiotic boom. European firms were embedded in chemical conglomerates. Market caps in tens to hundreds of millions.",rows:[
@@ -1295,6 +1295,13 @@ const DRUG_TA={
   'Strensiq':['rare-disease'],'Symdeko':['rare-disease'],
   'Trikafta':['rare-disease'],'Ultomiris':['rare-disease'],
   'Vyvgart':['rare-disease'],'Zolgensma':['rare-disease'],
+  // Added for #4 (well-known classifications only; ambiguous drugs intentionally left unmapped)
+  'Tivdak':['oncology'],'Fruzaqla':['oncology'],'Neupogen':['oncology'],'Filgrastim':['oncology'],'Neulasta':['oncology'],
+  'Trental':['cardio-metabolic'],'Kerendia':['cardio-metabolic'],'Blopress':['cardio-metabolic'],
+  'Vioxx':['neuroscience'],'Advil':['neuroscience'],'Relafen':['neuroscience'],'Butazolidin':['neuroscience'],'Actiq':['neuroscience'],'Provigil':['neuroscience'],'Lexapro':['neuroscience'],'Paxil':['neuroscience'],'Imitrex':['neuroscience'],'Pentothal':['neuroscience'],'Althesin':['neuroscience'],'Novocain':['neuroscience'],'Larocaine':['neuroscience'],'Copaxone generic':['neuroscience'],
+  'Claritin':['respiratory'],'Allegra':['respiratory'],'Seldane':['respiratory'],'Benadryl':['respiratory'],'Dimetane':['respiratory'],'Dimetapp':['respiratory'],'Chlor-Trimeton':['respiratory'],'Actifed':['respiratory'],'Dristan':['respiratory'],'Robitussin':['respiratory'],
+  'Achromycin':['infectious-disease'],'Amcill':['infectious-disease'],'Doryx':['infectious-disease'],'Lotrimin':['infectious-disease'],'Crixivan':['infectious-disease'],'Viekira Pak':['infectious-disease'],
+  'Actimmune':['rare-disease'],
 };
 const TA_KEYS=['oncology','cardio-metabolic','neuroscience','immunology','infectious-disease','vaccines','respiratory','rare-disease'];
 const TA_LABELS=['Oncology','Cardio-metabolic','Neuroscience','Immunology','Infectious Disease','Vaccines','Respiratory','Rare Disease'];

@@ -4,7 +4,7 @@ Seven decades of pharmaceutical dominance at 5-year intervals — from postwar a
 
 ## Views
 
-**Rankings** — Navigate any of the 16 five-year snapshots to see a ranked table of the top 25 companies, with market cap bars and key products for each.
+**Rankings** — Navigate any of the 16 five-year snapshots to see a ranked table of the top 25 companies (23 for 1995, see issue #2), with market cap bars and key products for each.
 
 **Bump Chart** — Each company's rank trajectory across all snapshots.
 
@@ -39,9 +39,9 @@ Coverage: 16 snapshots (1950–2025) · 10 countries (US, UK, Switzerland, Germa
 ## Highlights
 
 - **1950s** — Industry dominated by US companies emerging from the WWII antibiotic boom; European firms were embedded in chemical conglomerates
-- **1960** — Oral contraceptive Enovid approved; Librium and Valium launched the tranquilizer era; Kefauver-Harris Amendments reshaped FDA approval after Thalidomide
+- **1960s** — Enovid, the first oral contraceptive, approved for that use in 1960; Librium (1960) and Valium (1963) launched the tranquilizer era; the Kefauver-Harris Amendments (1962) reshaped FDA approval after Thalidomide
 - **2000** — Mega-merger wave formed GlaxoSmithKline, Novartis, AstraZeneca, and Aventis; Pfizer's acquisition of Warner-Lambert secured Lipitor, which became history's best-selling drug
-- **2025** — GLP-1 revolution drove Eli Lilly from $130B (2020) to ~$750B, the largest five-year value creation in pharma history; Novo Nordisk's Ozempic/Wegovy created a $60B+ annual obesity market
+- **2025** — GLP-1 revolution drove Eli Lilly from $130B (2020) to ~$750B in the 2025 snapshot (it briefly crossed $1 trillion later in 2025), the largest five-year value creation in pharma history; Novo Nordisk's Ozempic/Wegovy created a $60B+ annual obesity market
 
 ## Usage
 
@@ -53,7 +53,7 @@ Coverage: 16 snapshots (1950–2025) · 10 countries (US, UK, Switzerland, Germa
 
 Pre-1990 figures are estimates compiled from historical industry analyses and annual reports. Post-1990 figures are reported market capitalizations. All values are in USD billions. Rows are sorted by market cap at load, so rank always follows size.
 
-Run `node tools/check-data.js` to sanity-check the embedded dataset (duplicates, country flags, missing drugs, unsorted source rows).
+Run `node tools/check-scripts.js` (inline-script syntax) and `node tools/check-data.js` to sanity-check the embedded dataset (duplicates, country flags, missing drugs, unsorted source rows).
 
 ## License
 
