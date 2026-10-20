@@ -15,7 +15,7 @@ Everything lives in `index.html` in three contiguous sections:
 2. **HTML body** — 15 tab panels (`#tab-rankings`, `#tab-bump`, `#tab-heatmap`, `#tab-countries`, `#tab-bubble`, treemaps, `#tab-upset`, and the views listed below), driven by `.tab-bar` buttons with `data-tab`
 
 3. **`<script>`** — All JS, inline, structured as:
-   - **`data` object** (~800 lines): The entire dataset — keyed by year (1950–2025 in 5-year steps), each year has `note`, `footnote`, and `rows[]` (company name, country code, market cap in $B, key drugs array).
+   - **`data` object** (~430 lines): The entire dataset — keyed by year (1950–2025 in 5-year steps), each year has `note`, `footnote`, and `rows[]` (company name, country code, market cap in $B, key drugs array).
    - **`FLAGS`** map: Country code → emoji flag
    - **`YEARS`/`EARLY`/`MODERN`** arrays: The 16 snapshot years split into pre/post-2000 groups
    - **`fmt(c)` / `fmtS(c)`**: Market cap formatters (handles M/B scale)
@@ -33,7 +33,7 @@ Each row in `data[year].rows`:
 ```
 - `cap` is always in **$B**; pre-1990 values are fractional (e.g. `0.40` = $400M)
 - `cap: 0` or negative means the company is excluded from rendering that year
-- Pre-1990 data is estimated; post-1990 is sourced from reported figures
+- Pre-2000 data is estimated or approximate (1990 and 1995 are in the `EARLY` array); 2000 onward is sourced from reported figures. 1995 ranks only 23 companies (two placeholder rows with `cap: 0` are dropped at load; issue #2 stays open, do not invent caps)
 
 ## Normalization
 
@@ -45,4 +45,4 @@ Concentration, Slope, Value Flow, TA Stream, Lineage, Growth and Churn tabs live
 
 ## No Build / Data Check
 
-There is no build system; CI (`.github/workflows/check.yml`) runs `node tools/check-scripts.js` and `node tools/check-data.js`. Validate changes by opening `index.html` in a browser, and run `node tools/check-data.js` (add `--verbose` to list unmapped drugs) to sanity-check the dataset: duplicates, flag coverage, missing drugs, unsorted source rows.
+There is no build system; CI (`.github/workflows/check.yml`) runs `node tools/check-scripts.js` and `node tools/check-data.js`. Validate changes by opening `index.html` in a browser, and run `node tools/check-data.js` (unmapped drugs are always printed as a warning) to sanity-check the dataset: duplicates, flag coverage, missing drugs, unsorted source rows.

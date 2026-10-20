@@ -246,10 +246,10 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
         <tbody id="tbody"></tbody>
       </table>
     </div>
-    <div class="footer-row"><div class="footer-total">Top 25 combined: <span id="total"></span></div></div>
+    <div class="footer-row"><div class="footer-total">Top <span id="total-n">25</span> combined: <span id="total"></span></div></div>
     <div id="movers-panel"></div>
     <div class="fn" id="fn"></div>
-    <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-1990 figures are estimates</div>
+    <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -260,7 +260,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
       <div class="hm-desc">Each line = one company. Y-axis = rank within the top 25 (1 = largest). Lines are discontinuous when a company exits and re-enters the ranking. Hover to highlight a company.</div>
     </div>
     <div id="bump-wrap"></div>
-    <div class="credit">Pre-1990 figures are estimates · Rank based on nominal market cap within each snapshot</div>
+    <div class="credit">Pre-2000 figures are estimates · Rank based on nominal market cap within each snapshot</div>
   </div>
 </div>
 
@@ -282,9 +282,9 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
           <span class="legend-tick">$750B+</span>
         </div>
       </div>
-      <div class="legend-note">Scale uses √ transform so mid-tier companies stay visible. Pre-1990 = estimates. Gray = not in top 25 that year.</div>
+      <div class="legend-note">Scale uses √ transform so mid-tier companies stay visible. Pre-2000 = estimates. Gray = not in top 25 that year.</div>
     </div>
-    <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-1990 figures are estimates</div>
+    <div class="credit">Data compiled from annual reports, historical industry analyses &amp; market records · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -296,7 +296,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     </div>
     <div id="country-chart-wrap"></div>
     <div class="ctry-legend" id="ctry-legend"></div>
-    <div class="credit">Nominal figures · Home country = country of incorporation at time of snapshot · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures · Home country = country of incorporation at time of snapshot · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -308,7 +308,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     </div>
     <div id="bubble-wrap"></div>
     <div id="bubble-legend"></div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -319,7 +319,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
       <div class="hm-desc">Each cell = one company in one year. Size = 2025-dollar market cap for that snapshot. All ~400 data points sorted by size. Color = corporate family. Hover to explore, click for lineage.</div>
     </div>
     <div id="treemap-year-wrap"></div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -330,7 +330,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
       <div class="hm-desc">Each cell = one company. Size = cumulative 2025-dollar market cap across all top-25 appearances. Grouped and colored by corporate family. Hover to explore, click for lineage.</div>
     </div>
     <div id="treemap-wrap"></div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Inflation adjustment via US CPI-U · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -359,7 +359,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     <div class="vz-controls" id="conc-ctl"></div>
     <div class="vz-wrap" id="conc-wrap"></div>
     <div class="vz-note">Shares are within the top 25 only, not the whole industry. HHI uses market-cap shares of the 25 listed companies.</div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -372,7 +372,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     <div class="vz-controls" id="slope-ctl"></div>
     <div class="vz-wrap" id="slope-wrap"></div>
     <div class="vz-note">With “Same company” on, mergers within a corporate family (e.g. Glaxo → GlaxoSmithKline) are connected as one company; otherwise only exact names match.</div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -385,7 +385,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     <div class="vz-controls" id="flow-ctl"></div>
     <div class="vz-wrap" id="flow-wrap"></div>
     <div class="vz-note">An illustrative allocation, not revenue: it shows where a company’s flagship portfolio sits, not how much each drug earns. Drugs without a therapeutic-area mapping are Unclassified.</div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -398,7 +398,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     <div class="vz-controls" id="stream-ctl"></div>
     <div class="vz-wrap" id="stream-wrap"></div>
     <div class="vz-note">Allocation is illustrative (market cap split across flagship drugs). Grey “Unclassified” is cap tied to drugs outside the thirteen tracked areas, such as consumer products, vitamins, generics and bone or blood-supportive drugs.</div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -410,7 +410,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     </div>
     <div class="lv-grid" id="lineage-grid"></div>
     <div class="vz-note">Combined cap sums every family member that appeared in a top 25 that year, in 2025 dollars.</div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -423,7 +423,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     <div class="vz-controls" id="growth-ctl"></div>
     <div class="vz-wrap" id="growth-wrap"></div>
     <div class="vz-note">Real CAGR in 2025 dollars. Companies ranked in only one of the two years are listed beneath the chart, so survivors are over-represented.</div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -436,7 +436,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     <div class="vz-controls" id="churn-ctl"></div>
     <div class="vz-wrap" id="churn-wrap"></div>
     <div class="vz-note">Tenure is counted in 5-year snapshots and starts at 1950, so early values are capped. With “Same company” on, a merger inside a family does not count as an exit and entry.</div>
-    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
+    <div class="credit">Nominal figures from annual reports and historical analyses · Pre-2000 figures are estimates</div>
   </div>
 </div>
 
@@ -709,7 +709,7 @@ const data={
     {company:"Marion Merrell Dow",country:"US",cap:3.0,drugs:["Cardizem","Seldane","Carafate"]},
     {company:"Zeneca",country:"GB",cap:2.8,drugs:["Nolvadex","Tenormin","Zestril"]}
   ]},
-  1995:{note:"approximate",footnote:"Mid-1990s biotech boom. Glaxo+Wellcome merger ($14B, 1995) formed GlaxoWellcome. Novartis formed from Ciba-Geigy+Sandoz (1996). Lipitor approved (1996). HIV cocktail therapy transformed AIDS treatment. Managed care drove US pharma cost pressure.",rows:[
+  1995:{note:"approximate",footnote:"Mid-1990s biotech boom. Glaxo+Wellcome merger ($14B, 1995) formed GlaxoWellcome. Novartis formed from Ciba-Geigy+Sandoz (1996). Lipitor approved (1996). HIV cocktail therapy transformed AIDS treatment. Managed care drove US pharma cost pressure. Only 23 companies ranked (two placeholder rows have no reported market cap; see issue #2).",rows:[
     {company:"Merck & Co.",country:"US",cap:80.0,drugs:["Zocor","Mevacor","Vasotec","Crixivan"]},
     {company:"GlaxoWellcome",country:"GB",cap:70.0,drugs:["Zantac","Zovirax","Epivir","Retrovir"]},
     {company:"Johnson & Johnson",country:"US",cap:55.0,drugs:["Tylenol","Risperdal","Procrit","Neutrogena"]},
@@ -1680,6 +1680,7 @@ function renderR(){
     tr.addEventListener('click',()=>openPanel(row.company));
     tb.appendChild(tr);
   });
+  document.getElementById("total-n").textContent=validRows.length;
   document.getElementById('total').textContent='$'+validRows.reduce((s,r)=>s+r.cap,0).toFixed(1)+'B';
   document.getElementById('fn').textContent=d.footnote;
 
