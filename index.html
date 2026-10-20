@@ -397,7 +397,7 @@ tbody td.muted{color:var(--ink-3);font-size:12px;}
     </div>
     <div class="vz-controls" id="stream-ctl"></div>
     <div class="vz-wrap" id="stream-wrap"></div>
-    <div class="vz-note">Allocation is illustrative (market cap split across flagship drugs). Grey “Unclassified” is cap tied to drugs outside the eight tracked areas, such as consumer, GI and women’s health.</div>
+    <div class="vz-note">Allocation is illustrative (market cap split across flagship drugs). Grey “Unclassified” is cap tied to drugs outside the thirteen tracked areas, such as consumer products, vitamins, generics and bone or blood-supportive drugs.</div>
     <div class="credit">Nominal figures from annual reports and historical analyses · Pre-1990 figures are estimates</div>
   </div>
 </div>
@@ -1302,9 +1302,15 @@ const DRUG_TA={
   'Claritin':['respiratory'],'Allegra':['respiratory'],'Seldane':['respiratory'],'Benadryl':['respiratory'],'Dimetane':['respiratory'],'Dimetapp':['respiratory'],'Chlor-Trimeton':['respiratory'],'Actifed':['respiratory'],'Dristan':['respiratory'],'Robitussin':['respiratory'],
   'Achromycin':['infectious-disease'],'Amcill':['infectious-disease'],'Doryx':['infectious-disease'],'Lotrimin':['infectious-disease'],'Crixivan':['infectious-disease'],'Viekira Pak':['infectious-disease'],
   'Actimmune':['rare-disease'],
+  // Added for #6: GI, ophthalmology, women's health, urology, dermatology (well-known classes only)
+  'Nexium':['gastroenterology'],'Prilosec':['gastroenterology'],'Prevacid':['gastroenterology'],'Dexilant':['gastroenterology'],'Takepron':['gastroenterology'],'Zantac':['gastroenterology'],'Tagamet':['gastroenterology'],'Pepcid':['gastroenterology'],'Carafate':['gastroenterology'],'Zelnorm':['gastroenterology'],'Dulcolax':['gastroenterology'],'Modane':['gastroenterology'],'Gelusil':['gastroenterology'],'Donnatal':['gastroenterology'],'Tronolane':['gastroenterology'],
+  'Alphagan':['ophthalmology'],'Lumigan':['ophthalmology'],'Timoptic':['ophthalmology'],'Xalatan':['ophthalmology'],'Eylea':['ophthalmology'],'Eylea HD':['ophthalmology'],'Lucentis':['ophthalmology'],'Vabysmo':['ophthalmology'],'Ozurdex':['ophthalmology'],'Restasis':['ophthalmology'],
+  'Premarin':['womens-health'],'Estraderm':['womens-health'],'Femring':['womens-health'],'Enovid':['womens-health'],'Loestrin':['womens-health'],'Norlestrin':['womens-health'],'Yaz':['womens-health'],'Depo-Provera':['womens-health'],'Methergine':['womens-health'],
+  'Viagra':['urology'],'Levitra':['urology'],'Detrol':['urology'],
+  'Retin-A':['dermatology'],'Roaccutane':['dermatology'],'Betnovate':['dermatology'],'Rogaine':['dermatology'],
 };
-const TA_KEYS=['oncology','cardio-metabolic','neuroscience','immunology','infectious-disease','vaccines','respiratory','rare-disease'];
-const TA_LABELS=['Oncology','Cardio-metabolic','Neuroscience','Immunology','Infectious Disease','Vaccines','Respiratory','Rare Disease'];
+const TA_KEYS=['oncology','cardio-metabolic','neuroscience','immunology','infectious-disease','vaccines','respiratory','rare-disease','gastroenterology','ophthalmology','womens-health','urology','dermatology'];
+const TA_LABELS=['Oncology','Cardio-metabolic','Neuroscience','Immunology','Infectious Disease','Vaccines','Respiratory','Rare Disease','Gastroenterology','Ophthalmology','Women\'s Health','Urology & Sexual Health','Dermatology'];
 let upsetYear=2025;
 
 function mkUpsetNav(yrs,id){
@@ -2606,7 +2612,7 @@ const INK='#4a4540',MUTE='#8a8078',GRID='#e8e4db',ACC='#b84a2e',GOOD='#2f7d4f',B
 const EST_UNTIL=1990; // credits on every tab: pre-1990 figures are estimates
 const TA_ALL=[...TA_KEYS,'other'];
 const TA_NAME=Object.assign(Object.fromEntries(TA_KEYS.map((k,i)=>[k,TA_LABELS[i]])),{other:'Unclassified'});
-const TA_COL={oncology:'#b84a2e','cardio-metabolic':'#2d6fc4',neuroscience:'#7c3aed',immunology:'#0d9488','infectious-disease':'#c49a2d',vaccines:'#84cc16',respiratory:'#0891b2','rare-disease':'#db2777',other:'#c9c3b8'};
+const TA_COL={oncology:'#b84a2e','cardio-metabolic':'#2d6fc4',neuroscience:'#7c3aed',immunology:'#0d9488','infectious-disease':'#c49a2d',vaccines:'#84cc16',respiratory:'#0891b2','rare-disease':'#db2777',gastroenterology:'#92400e',ophthalmology:'#4f46e5',"womens-health":'#d946ef',urology:'#475569',dermatology:'#f59e0b',other:'#c9c3b8'};
 let famOn=true; // treat mergers/renames within a corporate family as one company
 
 const taKey=d=>d.replace(/\s*\(.*?\)/g,'').trim();

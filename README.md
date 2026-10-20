@@ -16,7 +16,7 @@ Seven decades of pharmaceutical dominance at 5-year intervals — from postwar a
 
 **Treemap-Year / Treemap-Aggregate** — Inflation-adjusted market cap per company-year, and cumulative dominance per company, grouped by corporate family.
 
-**Therapeutic Areas** — Dot matrix of each year's top 25 against eight therapeutic areas.
+**Therapeutic Areas** — Dot matrix of each year's top 25 against thirteen therapeutic areas.
 
 **Concentration** — Top-1/5/10 share of the top-25 total and the Herfindahl index over time.
 
